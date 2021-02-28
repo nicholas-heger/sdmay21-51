@@ -9,5 +9,7 @@ public class DemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
-
+    public void run(String... args) throws Exception {
+        System.out.println("hi");
+    }
 }
