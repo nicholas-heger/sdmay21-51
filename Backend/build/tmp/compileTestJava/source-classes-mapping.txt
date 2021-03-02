@@ -1,0 +1,2 @@
+com/example/accessingdatamongodb/CustomerRepositoryTests.java
+ com.example.accessingdatamongodb.CustomerRepositoryTests
