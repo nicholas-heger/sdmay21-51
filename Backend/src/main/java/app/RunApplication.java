@@ -45,7 +45,7 @@ public class RunApplication implements CommandLineRunner {
         /*
         System.out.println("Customers found with findAll():");
         System.out.println("-------------------------------");
-        for (Customer customer : customerRepository.findAll()) {
+        for (Customer customer : customerRepogsitory.findAll()) {
             System.out.println(customer);
         }
         System.out.println();
