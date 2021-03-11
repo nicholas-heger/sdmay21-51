@@ -6,14 +6,16 @@ export default class SignUp extends Component {
             <form>
                 <h3>Sign Up</h3>
 
-                <div className="form-group">
-                    <label>First name</label>
-                    <input type="text" className="form-control" placeholder="First name" />
-                </div>
+                <div className="form-row">
+                    <div className="col form-group">
+                        <label>First name</label>
+                        <input type="text" className="form-control" placeholder="First name" />
+                    </div>
 
-                <div className="form-group">
-                    <label>Last name</label>
-                    <input type="text" className="form-control" placeholder="Last name" />
+                    <div className="col form-group">
+                        <label>Last name</label>
+                        <input type="text" className="form-control" placeholder="Last name" />
+                    </div>
                 </div>
 
                 <div className="form-group">
@@ -24,6 +26,14 @@ export default class SignUp extends Component {
                 <div className="form-group">
                     <label>Password</label>
                     <input type="password" className="form-control" placeholder="Enter password" />
+                </div>
+
+                <div className="form-group">
+                    <label>Account Type</label>
+                    <select type="select" className="form-control" >
+                        <option selected>Task Generator</option>
+                        <option>Worker</option>
+                    </select>
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
