@@ -31,7 +31,7 @@ export default class SignUp extends Component {
                 <div className="form-group">
                     <label>Account Type</label>
                     <select type="select" className="form-control" >
-                        <option selected>Task Generator</option>
+                        <option defaultValue>Task Generator</option>
                         <option>Worker</option>
                     </select>
                 </div>
