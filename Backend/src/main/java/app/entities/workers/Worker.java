@@ -18,8 +18,7 @@ public class Worker {
     private List<Skill> skills;
     private Location location;
 
-    public Worker() {
-    }
+    public Worker() {}
 
     public Worker(String firstName, String lastName, List<Skill> skills, Location location) {
         this.firstName = firstName;
@@ -35,4 +34,19 @@ public class Worker {
                 id, firstName, lastName);
     }
 
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }
