@@ -152,7 +152,12 @@ className modal fade is ideal but not working
                 </button>
               </div>
               <div className="modal-body">
-                <input type="text" className="form-control" placeholder="Enter Skill Here" />
+                <div className="form-group">
+                  <input id="skillEntered" type="text" className="form-control" placeholder="Enter Skill" />
+                </div>
+                <div className="form-group">
+                  <input id="skillRatingEntered" type="text" className="form-control" placeholder="Enter Skill Proficiency (1-5)" />
+                </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.toggleModal}>Close</button>

@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./components/login.component";
 import SignUp from "./components/signup.component";
+import Tasks from "./components/tasks.component";
+import Assignments from "./components/assignments.component";
 import Skills from "./components/skills.component";
 
 function App() {
@@ -22,6 +24,12 @@ function App() {
                 <Link className="nav-link" to={"/sign-up"}>Sign up</Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to={"/tasks"}>Tasks</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={"/assignments"}>Assignments</Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to={"/skills"}>Skills</Link>
               </li>
             </ul>
@@ -35,6 +43,8 @@ function App() {
             <Route exact path='/' component={Login} />
             <Route path="/sign-in" component={Login} />
             <Route path="/sign-up" component={SignUp} />
+            <Route path="/tasks" component={Tasks} />
+            <Route path="/assignments" component={Assignments} />
             <Route path="/skills" component={Skills} />
           </Switch>
         </div>
