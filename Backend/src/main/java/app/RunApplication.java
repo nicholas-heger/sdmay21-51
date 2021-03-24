@@ -32,7 +32,7 @@ public class RunApplication implements CommandLineRunner {
         customerRepository.deleteAll();
         workerRepository.deleteAll();
 
-        workerRepository.save(new Worker("Steven", "Sheets", Arrays.asList(
+        workerRepository.save(new Worker("Steven", "Sheets", "smsheets@iastate.edu", Arrays.asList(
                 new Skill("Java", 5),
                 new Skill("C", 4)),
                 new Location(42.022160, -93.642873)));

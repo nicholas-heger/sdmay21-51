@@ -9,6 +9,8 @@
   considered it becomes exponentially more complex.
   
 ## Technologies
+- [GitLab](https://about.gitlab.com/)
 - [MongoDB](https://cloud.mongodb.com/v2/602444722caf7e00e64c11f8#clusters)
-
+- [React](https://reactjs.org/)
+- [npm](https://www.npmjs.com/)
 
