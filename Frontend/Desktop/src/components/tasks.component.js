@@ -36,10 +36,14 @@ export default class Tasks extends Component {
 
   componentDidMount() {
     // Data from sign up page
-    console.log("Account Type");
-    console.log(this.props.location.state.accountType);
-    this.setState({email: this.props.location.state.email})
-    this.setState({accountType: this.props.location.state.accountType})
+    if (this?.props?.location?.state !== undefined) {
+      console.log("Email");
+      console.log(this.props.location.state.email);
+      console.log("Account Type");
+      console.log(this.props.location.state.accountType);
+      this.setState({email: this.props.location.state.email})
+      this.setState({accountType: this.props.location.state.accountType})
+    }
 
     // Get request
     axios.get(`https://api.mocki.io/v1/98d5b2a9`)

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
 
 export default class Assignments extends Component {
@@ -65,6 +65,12 @@ export default class Assignments extends Component {
   render() {
     return (
       <div>
+        <Link to={{pathname: '/skills', state: {email: this.state.email, accountType: this.state.accountType}}}>
+          <button type="button" className="btn btn-primary">
+            View My Skills
+          </button>
+        </Link>
+
         <div className={this.state.showModal ? 'modal modalShow': 'modal modalHide'}  id="createTaskModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel">
           <div className="modal-dialog" role="document">
             <div className="modal-content">

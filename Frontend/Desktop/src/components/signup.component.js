@@ -6,24 +6,48 @@ export default class SignUp extends Component {
     constructor(props) {
         super(props);
         this.createAccount = this.createAccount.bind(this);
+        this.setFirstName = this.setFirstName.bind(this);
+        this.setLastName = this.setLastName.bind(this);
+        this.setEmail = this.setEmail.bind(this);
+        this.setPassword = this.setPassword.bind(this);
         this.setAccountType = this.setAccountType.bind(this);
         // this.timeout = this.timeout.bind(this);
       }
     
       state = {
-        email: null,
-        accountType: "Task Generator"
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        accountType: "Task Generator",
+        accountValid: true,
+        nextPage: "/tasks"
       };
     
-      createAccount() {
+    createAccount() {
         // POST
-      }
+    }
 
-    //   timeout(delay) {
-    //     return new Promise( res => setTimeout(res, delay) );
-    // }
+    setFirstName(event) {
+        this.setState({firstName: event.target.value});
+    }
 
-    //   async setAccountType(event) {
+    setLastName(event) {
+        this.setState({lastName: event.target.value});
+    }
+
+    setEmail(event) {
+        this.setState({email: event.target.value});
+    }
+
+    setPassword(event) {
+        this.setState({password: event.target.value});
+    }
+
+    timeout(delay) {
+        return new Promise( res => setTimeout(res, delay) );
+    }
+
     setAccountType(event) {
         this.setState({accountType: event.target.value});
         // await this.timeout(1000);
@@ -31,6 +55,9 @@ export default class SignUp extends Component {
     
 
     render() {
+        var pathname = this.state.accountType === "Task Generator" ? "/tasks" : "/assignments";
+        pathname = this.state.accountValid ? pathname : "/"
+
         return (
             <form>
                 <h3>Sign Up</h3>
@@ -38,23 +65,23 @@ export default class SignUp extends Component {
                 <div className="form-row">
                     <div className="col form-group">
                         <label>First name</label>
-                        <input type="text" className="form-control" placeholder="First name" />
+                        <input type="text" className="form-control" placeholder="First name" onChange={this.setFirstName}/>
                     </div>
 
                     <div className="col form-group">
                         <label>Last name</label>
-                        <input type="text" className="form-control" placeholder="Last name" />
+                        <input type="text" className="form-control" placeholder="Last name" onChange={this.setLastName}/>
                     </div>
                 </div>
 
                 <div className="form-group">
                     <label>Email address</label>
-                    <input type="email" className="form-control" placeholder="Enter email" />
+                    <input type="email" className="form-control" placeholder="Enter email" onChange={this.setEmail}/>
                 </div>
 
                 <div className="form-group">
                     <label>Password</label>
-                    <input type="password" className="form-control" placeholder="Enter password" />
+                    <input type="password" className="form-control" placeholder="Enter password" onChange={this.setPassword}/>
                 </div>
 
                 <div className="form-group">
@@ -65,7 +92,7 @@ export default class SignUp extends Component {
                     </select>
                 </div>
 
-                <Link to={{pathname: "/tasks", state: {email: this.state.email, accountType: this.state.accountType}}}>
+                <Link to={{pathname: pathname, state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
                 </Link>
                 <p className="forgot-password text-right">

@@ -6,17 +6,30 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.signIn = this.signIn.bind(this);
+        this.setEmail = this.setEmail.bind(this);
+        this.setPassword = this.setPassword.bind(this);
         this.setAccountType = this.setAccountType.bind(this);
       }
     
       state = {
-        email: null,
-        accountType: "Task Generator"
+        email: "",
+        password: "",
+        accountType: "Task Generator",
+        accountValid: true,
+        nextPage: "/tasks"
       };
     
-      signIn() {
+    signIn() {
         // GET
-      }
+    }
+
+    setEmail(event) {
+        this.setState({email: event.target.value});
+    }
+
+    setPassword(event) {
+        this.setState({password: event.target.value});
+    }
 
     setAccountType(event) {
         this.setState({accountType: event.target.value});
@@ -29,12 +42,12 @@ export default class Login extends Component {
 
                 <div className="form-group">
                     <label>Email address</label>
-                    <input type="email" className="form-control" placeholder="Enter email" />
+                    <input type="email" className="form-control" placeholder="Enter email"  onChange={this.setEmail}/>
                 </div>
 
                 <div className="form-group">
                     <label>Password</label>
-                    <input type="password" className="form-control" placeholder="Enter password" />
+                    <input type="password" className="form-control" placeholder="Enter password"  onChange={this.setPassword}/>
                 </div>
 
                 <div className="form-group">
