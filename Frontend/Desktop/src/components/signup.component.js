@@ -6,6 +6,7 @@ export default class SignUp extends Component {
     constructor(props) {
         super(props);
         this.createAccount = this.createAccount.bind(this);
+        this.verifyCredentials = this.verifyCredentials.bind(this);
         this.setFirstName = this.setFirstName.bind(this);
         this.setLastName = this.setLastName.bind(this);
         this.setEmail = this.setEmail.bind(this);
@@ -20,12 +21,35 @@ export default class SignUp extends Component {
         email: "",
         password: "",
         accountType: "Task Generator",
-        accountValid: true,
-        nextPage: "/tasks"
+        accountValid: false,
+        nextPage: "/tasks",
+        articleId: null
       };
     
-    createAccount() {
+    async createAccount() {
+        await this.verifyCredentials();
+        console.log("account validity = ");
+        console.log(this.state.accountValid);
+        if (!this.state.accountValid) {
+            console.log("account was invalid");
+            return;
+        }
+        const postData = JSON.stringify({firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: this.state.password});
+        const postURL = 'https://webhook.site/108941ee-aa2f-43ab-9e01-cfff32d36eba'; // + this.state.accountType;
         // POST
+        axios.post(postURL, postData)
+          .then(res => {
+            console.log("post response");
+            console.log(res.data.id);
+            this.setState({ articleId: res.data.id })
+          })
+    }
+
+    async verifyCredentials() {
+        var invalid = this.state.firstName.length === 0 || this.state.lastName.length === 0 || this.state.email.length === 0 || this.state.password.length === 0;
+        console.log("invalid = ")
+        console.log(invalid);
+        this.setState({accountValid: !invalid});
     }
 
     setFirstName(event) {
@@ -44,9 +68,9 @@ export default class SignUp extends Component {
         this.setState({password: event.target.value});
     }
 
-    timeout(delay) {
-        return new Promise( res => setTimeout(res, delay) );
-    }
+    // timeout(delay) {
+    //     return new Promise( res => setTimeout(res, delay) );
+    // }
 
     setAccountType(event) {
         this.setState({accountType: event.target.value});
@@ -55,6 +79,8 @@ export default class SignUp extends Component {
     
 
     render() {
+        console.log("in render method");
+        console.log(this.state.accountValid);
         var pathname = this.state.accountType === "Task Generator" ? "/tasks" : "/assignments";
         pathname = this.state.accountValid ? pathname : "/"
 
@@ -93,7 +119,7 @@ export default class SignUp extends Component {
                 </div>
 
                 <Link to={{pathname: pathname, state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
-                    <button type="submit" className="btn btn-primary btn-block">Sign Up</button>
+                    <button type="submit" className="btn btn-primary btn-block" onClick={this.createAccount}>Sign Up</button>
                 </Link>
                 <p className="forgot-password text-right">
                     Already registered <a href="../sign-in">sign in?</a>
