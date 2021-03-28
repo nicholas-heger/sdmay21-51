@@ -1,4 +1,4 @@
-package app.entities.workers;
+package app.entities.common;
 
 public class Skill {
     private String name;
@@ -23,5 +23,10 @@ public class Skill {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("app.entities.common.Skill[name=%s, rating=%f]", name, rating);
     }
 }

@@ -8,9 +8,8 @@ import java.util.List;
 @Repository
 public interface EmployerRepository extends MongoRepository<Employer, String> {
 
-    public Employer findByFirstName(String firstName);
+    public List<Employer> findByFirstName(String firstName);
 
     public List<Employer> findByLastName(String lastName);
-
 }
 

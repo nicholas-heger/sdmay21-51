@@ -1,6 +1,7 @@
 package app.entities.workers;
 
 import app.entities.common.Location;
+import app.entities.common.Skill;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -32,8 +33,32 @@ public class Worker {
     @Override
     public String toString() {
         return String.format(
-                "app.entities.workers.Worker[id=%s, firstName='%s', lastName='%s']",
-                id, firstName, lastName);
+                "app.entities.workers.Worker[id=%s, firstName=%s, lastName=%s, email=%s, skills=%s, location=%s]",
+                id, firstName, lastName, email, skills, location);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public List<Skill> getSkills() {
@@ -51,4 +76,5 @@ public class Worker {
     public void setLocation(Location location) {
         this.location = location;
     }
+
 }

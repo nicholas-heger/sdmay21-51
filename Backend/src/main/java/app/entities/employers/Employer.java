@@ -7,10 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Employer {
 
     @Id
-    public String id;
+    private String id;
 
-    public String firstName;
-    public String lastName;
+    private String firstName;
+    private String lastName;
 
     public Employer() {
     }
@@ -23,7 +23,7 @@ public class Employer {
     @Override
     public String toString() {
         return String.format(
-                "app.entities.employers.Employer[id=%s, firstName='%s', lastName='%s']",
+                "app.entities.employers.Employer[id=%s, firstName=%s, lastName=%s]",
                 id, firstName, lastName);
     }
 
