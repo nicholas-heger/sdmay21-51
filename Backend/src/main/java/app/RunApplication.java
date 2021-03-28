@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +35,9 @@ public class RunApplication implements CommandLineRunner {
     @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public static void main(String[] args) {
         SpringApplication.run(RunApplication.class, args);
     }
@@ -41,6 +45,7 @@ public class RunApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEE" + passwordEncoder);
         CustomQueryRepository customQueryRepository = new CustomQueryRepository(jobRepository, employerRepository, workerRepository);
 
         customerRepository.deleteAll();
@@ -48,7 +53,7 @@ public class RunApplication implements CommandLineRunner {
         employerRepository.deleteAll();
         jobRepository.deleteAll();
 
-//        List<Employer> employerList = employerRepository.findByFirstName("Jared");
+//        List<User> employerList = employerRepository.findByFirstName("Jared");
 //        System.out.println(employerList);
 //
 //        System.out.println(jobRepository.findByPoster(employerList.get(0)));
@@ -63,10 +68,10 @@ public class RunApplication implements CommandLineRunner {
         Location l1 = new Location(42.022160, -93.642873);
         Location l2 = new Location(42.03, -93.65);
 
-        Worker w1 = new Worker("Steven", "Sheets", "smsheets@iastate.edu", sl1, l1);
+        Worker w1 = new Worker("Steven", "Sheets", "smsheets@iastate.edu", passwordEncoder.encode("password369"), sl1, l1);
         workerRepository.save(w1);
 
-        Employer e1 = new Employer("Jared", "Weiland");
+        Employer e1 = new Employer("Jared", "Weiland", "jweiland@iastate.edu", passwordEncoder.encode("password123"));
         employerRepository.save(e1);
 
         Job j1 = new Job(e1, w1, l2, "Test job", sl2);

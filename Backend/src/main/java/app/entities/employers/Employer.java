@@ -1,29 +1,25 @@
 package app.entities.employers;
 
-import org.springframework.data.annotation.Id;
+import app.entities.users.User;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "employers")
-public class Employer {
-
-    @Id
-    private String id;
-
-    private String firstName;
-    private String lastName;
+public class Employer extends User {
 
     public Employer() {
     }
 
-    public Employer(String firstName, String lastName) {
+    public Employer(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.email = email;
+        this.password = password;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "app.entities.employers.Employer[id=%s, firstName=%s, lastName=%s]",
+                "app.entities.employers.User[id=%s, firstName=%s, lastName=%s]",
                 id, firstName, lastName);
     }
 

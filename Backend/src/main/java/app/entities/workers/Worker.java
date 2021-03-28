@@ -2,30 +2,24 @@ package app.entities.workers;
 
 import app.entities.common.Location;
 import app.entities.common.Skill;
-import org.springframework.data.annotation.Id;
+import app.entities.users.User;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
 @Document(collection = "workers")
-public class Worker {
-
-    @Id
-    private String id;
-
-    private String firstName;
-    private String lastName;
-    private String email;
-
+public class Worker extends User {
     private List<Skill> skills;
     private Location location;
 
-    public Worker() {}
+    public Worker() {
+    }
 
-    public Worker(String firstName, String lastName, String email, List<Skill> skills, Location location) {
+    public Worker(String firstName, String lastName, String email, String password, List<Skill> skills, Location location) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
         this.skills = skills;
         this.location = location;
     }
