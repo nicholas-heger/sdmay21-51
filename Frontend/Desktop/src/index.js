@@ -4,25 +4,16 @@ import { BrowserRouter } from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloClient, ApolloProvider, InMemoryCache, gql } from '@apollo/client';
+import {ApolloClient, ApolloProvider, InMemoryCache, gql, createHttpLink} from '@apollo/client';
 
-const client = new ApolloClient({
-  uri: 'https://48p1r2roz4.sse.codesandbox.io',
-  cache: new InMemoryCache()
+const link = createHttpLink({
+    uri: 'http://localhost:8080/graphql',
 });
 
-client
-  .query({
-    query: gql`
-      query GetRates {
-        rates(currency: "USD") {
-          currency
-        }
-      }
-    `
-  })
-  .then(result => console.log(result));
-
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link,
+});
 
 ReactDOM.render(
   <React.StrictMode>

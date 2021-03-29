@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
+import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
+import { Mutation} from "@apollo/client/react/components";
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -14,7 +16,7 @@ export default class SignUp extends Component {
         this.setAccountType = this.setAccountType.bind(this);
         // this.timeout = this.timeout.bind(this);
       }
-    
+
       state = {
         firstName: "",
         lastName: "",
@@ -25,8 +27,8 @@ export default class SignUp extends Component {
         nextPage: "/tasks",
         articleId: null
       };
-    
-    async createAccount() {
+
+    async createAccount(createEmployer) {
         await this.verifyCredentials();
         console.log("account validity = ");
         console.log(this.state.accountValid);
@@ -34,12 +36,11 @@ export default class SignUp extends Component {
             console.log("account was invalid");
             return;
         }
-        const postData = JSON.stringify({firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, password: this.state.password});
-        const postURL = 'https://webhook.site/108941ee-aa2f-43ab-9e01-cfff32d36eba'; // + this.state.accountType;
-        // POST
-        axios.post(postURL, postData)
+
+        createEmployer()
           .then(res => {
             console.log("post response");
+            console.log(res);
             console.log(res.data.id);
             this.setState({ articleId: res.data.id })
           })
@@ -76,7 +77,7 @@ export default class SignUp extends Component {
         this.setState({accountType: event.target.value});
         // await this.timeout(1000);
     }
-    
+
 
     render() {
         console.log("in render method");
@@ -119,7 +120,20 @@ export default class SignUp extends Component {
                 </div>
 
                 <Link to={{pathname: pathname, state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
-                    <button type="submit" className="btn btn-primary btn-block" onClick={this.createAccount}>Sign Up</button>
+                    <Mutation variables={{
+                        firstName: this.state.firstName,
+                        lastName: this.state.lastName,
+                        email: this.state.email,
+                        password: this.state.password
+                    }} mutation={MUTATE_EMPLOYER_ACCOUNT}>
+                        {
+                            (createEmployer) => {
+                            return (
+                                <button type="submit" className="btn btn-primary btn-block" onClick={() => this.createAccount(createEmployer)}>Sign Up</button>
+                                );
+                            }
+                        }
+                    </Mutation>
                 </Link>
                 <p className="forgot-password text-right">
                     Already registered <a href="../sign-in">sign in?</a>
