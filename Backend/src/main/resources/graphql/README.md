@@ -10,7 +10,7 @@ query getAllEmployers {
     }
 }
 
-query getAllWorker {
+query getAllWorkers {
     workers {
         id
         firstName
