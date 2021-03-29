@@ -17,20 +17,17 @@ public class Job {
     private String id;
 
     @DBRef
-    private Employer poster;
+    private Employer employer;
     @DBRef
-    private Worker assignee;
+    private Worker worker;
 
     private Location location;
     private String description;
     private List<Skill> desiredSkills;
 
-    public Job() {
-    }
-
-    public Job(Employer poster, Worker assignee, Location location, String description, List<Skill> desiredSkills) {
-        this.poster = poster;
-        this.assignee = assignee;
+    public Job(Employer employer, Worker worker, Location location, String description, List<Skill> desiredSkills) {
+        this.employer = employer;
+        this.worker = worker;
         this.location = location;
         this.description = description;
         this.desiredSkills = desiredSkills;
@@ -39,24 +36,24 @@ public class Job {
     @Override
     public String toString() {
         return String.format(
-                "app.entities.employers.Job[id=%s, poster=%s, assignee=%s, location=%s, " +
-                        "description=%s, desiredSkills=%s]", id, poster, assignee, location, description, desiredSkills);
+                "app.entities.employers.Job[id=%s, employer=%s, worker=%s, location=%s, " +
+                        "description=%s, desiredSkills=%s]", id, employer, worker, location, description, desiredSkills);
     }
 
-    public Employer getPoster() {
-        return poster;
+    public Employer getEmployer() {
+        return employer;
     }
 
-    public void setPoster(Employer poster) {
-        this.poster = poster;
+    public void setEmployer(Employer employer) {
+        this.employer = employer;
     }
 
-    public Worker getAssignee() {
-        return assignee;
+    public Worker getWorker() {
+        return worker;
     }
 
-    public void setAssignee(Worker assignee) {
-        this.assignee = assignee;
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 
     public Location getLocation() {

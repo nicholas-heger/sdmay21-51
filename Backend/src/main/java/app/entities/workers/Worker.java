@@ -12,14 +12,8 @@ public class Worker extends User {
     private List<Skill> skills;
     private Location location;
 
-    public Worker() {
-    }
-
     public Worker(String firstName, String lastName, String email, String password, List<Skill> skills, Location location) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
+        super(firstName, lastName, email, password);
         this.skills = skills;
         this.location = location;
     }
@@ -28,31 +22,7 @@ public class Worker extends User {
     public String toString() {
         return String.format(
                 "app.entities.workers.Worker[id=%s, firstName=%s, lastName=%s, email=%s, skills=%s, location=%s]",
-                id, firstName, lastName, email, skills, location);
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+                this.getId(), this.getFirstName(), this.getLastName(), this.getEmail(), skills, location);
     }
 
     public List<Skill> getSkills() {

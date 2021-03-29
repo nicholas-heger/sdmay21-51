@@ -1,24 +1,13 @@
 package app;
 
-import app.entities.common.CustomQueryRepository;
-import app.entities.common.Location;
-import app.entities.common.Skill;
 import app.entities.customers.CustomerRepository;
-import app.entities.employers.Employer;
-import app.entities.employers.EmployerRepository;
-import app.entities.jobs.Job;
 import app.entities.jobs.JobRepository;
-import app.entities.workers.Worker;
 import app.entities.workers.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @SpringBootApplication()
 public class RunApplication implements CommandLineRunner {
@@ -29,14 +18,12 @@ public class RunApplication implements CommandLineRunner {
     @Autowired
     private WorkerRepository workerRepository;
 
-    @Autowired
-    private EmployerRepository employerRepository;
+//    @Autowired
+//    private EmployerRepository employerRepository;
 
     @Autowired
     private JobRepository jobRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(RunApplication.class, args);
@@ -44,8 +31,8 @@ public class RunApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEE" + passwordEncoder);
+/*
+        System.out.println("REEEEEEEEEEEEEEEEEEEEEEEEEEE: " + passwordEncoder);
         CustomQueryRepository customQueryRepository = new CustomQueryRepository(jobRepository, employerRepository, workerRepository);
 
         customerRepository.deleteAll();
@@ -106,8 +93,7 @@ public class RunApplication implements CommandLineRunner {
         for (Customer customer : customerRepository.findByLastName("Smith")) {
             System.out.println(customer);
         }
-        */
-
+*/
     }
 
 }

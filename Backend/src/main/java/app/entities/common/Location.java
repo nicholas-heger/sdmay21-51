@@ -1,11 +1,20 @@
 package app.entities.common;
 
 public class Location {
-    private double longitude;
     private double latitude;
 
-    public Location(double longitude, double latitude) {
+    private double longitude;
+
+    public Location(double latitude, double longitude) {
+        this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
@@ -17,12 +26,13 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
+    public static class LocationInput {
+        public double latitude;
+        public double longitude;
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        public Location toLocation() {
+            return new Location(this.latitude, this.longitude);
+        }
     }
 
 }

@@ -29,4 +29,13 @@ public class Skill {
     public String toString() {
         return String.format("app.entities.common.Skill[name=%s, rating=%f]", name, rating);
     }
+
+    public static class SkillInput {
+        public String name;
+        public double rating;
+
+        public Skill toSkill() {
+            return new Skill(this.name, rating);
+        }
+    }
 }

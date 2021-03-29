@@ -11,8 +11,9 @@ import java.util.List;
 public interface JobRepository extends MongoRepository<Job, String> {
     public List<Job> findAll();
 
-    public List<Job> findByPoster(Employer employer);
+    public List<Job> findByEmployer(Employer employer);
 
-    public List<Job> findByAssignee(Worker worker);
+    public List<Job> findByWorker(Worker worker);
+    
 }
 
