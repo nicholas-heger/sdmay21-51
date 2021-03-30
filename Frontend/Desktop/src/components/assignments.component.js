@@ -64,6 +64,8 @@ export default class Assignments extends Component {
 
   render() {
     return (
+        <div className="auth-wrapper">
+            <div className="auth-inner">
       <div>
         <Link to={{pathname: '/skills', state: {email: this.state.email, accountType: this.state.accountType}}}>
           <button type="button" className="btn btn-primary">
@@ -106,6 +108,8 @@ export default class Assignments extends Component {
           { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
         </ul>
       </div>
+            </div>
+        </div>
     )
   }
 }

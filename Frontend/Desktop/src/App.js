@@ -43,8 +43,6 @@ class App extends React.Component {
               </div>
             </nav>
 
-            <div className="auth-wrapper">
-              <div className="auth-inner">
                 <Switch>
                   <Route exact path='/' component={SignUp}/>
                   <Route path="/sign-up" component={SignUp}/>
@@ -54,8 +52,6 @@ class App extends React.Component {
                   <Route path="/skills" component={Skills}/>
                   <Route path="/map" component={MapPage}/>
                 </Switch>
-              </div>
-            </div>
           </div>
         </Router>
     );
