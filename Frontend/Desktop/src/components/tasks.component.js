@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+
 import axios from 'axios';
 
 export default class Tasks extends Component {
@@ -77,6 +78,8 @@ export default class Tasks extends Component {
 
   render() {
     return (
+        <div className="auth-wrapper">
+            <div className="auth-inner">
       <div>
         <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#createTaskModal" onClick={this.toggleModal}>
           Create Task
@@ -117,6 +120,8 @@ export default class Tasks extends Component {
           { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
         </ul>
       </div>
+            </div>
+        </div>
     )
   }
 }

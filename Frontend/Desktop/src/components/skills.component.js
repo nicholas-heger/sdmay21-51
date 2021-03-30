@@ -119,6 +119,7 @@ export default class Skills extends Component {
   }
 
   render() {
+
     // const { totalReactPackages } = this.state;
     return (
         // <div className="card text-center m-3">
@@ -135,6 +136,8 @@ export default class Skills extends Component {
       // <ul>
       //   { this.state.persons.map(person => <li>{person.name}</li>)}
       // </ul>
+        <div className="auth-wrapper">
+            <div className="auth-inner">
       <div>
         <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addSkillModal" onClick={this.toggleModal}>
           Add Skill
@@ -171,6 +174,8 @@ className modal fade is ideal but not working
           { this.state.skills.map(skill => <li className="list-group-item">{skill}</li>)}
         </ul>
       </div>
+            </div>
+        </div>
     )
   }
 }
