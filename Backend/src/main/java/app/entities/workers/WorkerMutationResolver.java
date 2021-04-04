@@ -62,4 +62,5 @@ public class WorkerMutationResolver implements GraphQLMutationResolver {
             return false;
         }
     }
+
 }

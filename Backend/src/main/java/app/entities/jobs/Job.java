@@ -13,6 +13,8 @@ import java.util.List;
 @Document(collection = "jobs")
 public class Job {
 
+    private Status status;
+
     @Id
     private String id;
 
@@ -24,13 +26,18 @@ public class Job {
     private Location location;
     private String description;
     private List<Skill> desiredSkills;
-
+    private int estimatedTimeTillCompletion;
     public Job(Employer employer, Worker worker, Location location, String description, List<Skill> desiredSkills) {
         this.employer = employer;
         this.worker = worker;
         this.location = location;
         this.description = description;
         this.desiredSkills = desiredSkills;
+        this.status = Status.LOOKING_FOR_WORKER;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 
     @Override
@@ -78,5 +85,23 @@ public class Job {
 
     public void setDesiredSkills(List<Skill> desiredSkills) {
         this.desiredSkills = desiredSkills;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public int getEstimatedTimeTillCompletion() {
+        return estimatedTimeTillCompletion;
+    }
+
+    public void setEstimatedTimeTillCompletion(int estimatedTimeTillCompletion) {
+        this.estimatedTimeTillCompletion = estimatedTimeTillCompletion;
+    }
+
+    public enum Status {
+        LOOKING_FOR_WORKER,
+        IN_PROGRESS,
+        COMPLETED
     }
 }
