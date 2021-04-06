@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import axios from 'axios';
-import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
-import { Mutation} from "@apollo/client/react/components";
+import { Mutation } from "@apollo/client/react/components";
+import { MUTATE_EMPLOYER_ACCOUNT, MUTATE_WORKER_ACCOUNT } from './mutations';
+import { LocationInput } from '../classes/LocationInput';
+import { SkillsInput } from '../classes/SkillsInput';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -25,7 +26,9 @@ export default class SignUp extends Component {
         accountType: "Task Generator",
         accountValid: false,
         nextPage: "/tasks",
-        articleId: null
+        userId: null,
+        location: null,
+        skills: null
       };
 
     async createAccount(createEmployer) {
@@ -42,14 +45,12 @@ export default class SignUp extends Component {
             console.log("post response");
             console.log(res);
             console.log(res.data.id);
-            this.setState({ articleId: res.data.id })
+            this.setState({ userId: res.data.id })
           })
     }
 
     async verifyCredentials() {
         var invalid = this.state.firstName.length === 0 || this.state.lastName.length === 0 || this.state.email.length === 0 || this.state.password.length === 0;
-        console.log("invalid = ")
-        console.log(invalid);
         this.setState({accountValid: !invalid});
     }
 
