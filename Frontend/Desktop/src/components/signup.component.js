@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
+import { Mutation } from "@apollo/client/react/components";
 import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
-import { Mutation} from "@apollo/client/react/components";
+import { LocationInput } from '../classes/LocationInput';
+import { SkillsInput } from '../classes/SkillsInput';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -25,13 +27,13 @@ export default class SignUp extends Component {
         accountType: "Task Generator",
         accountValid: false,
         nextPage: "/tasks",
-        articleId: null
+        userId: null,
+        location: null,
+        skills: null
       };
 
-    async createAccount(createEmployer) {
-        await this.verifyCredentials();
-        console.log("account validity = ");
-        console.log(this.state.accountValid);
+    createAccount(createEmployer) {
+        this.verifyCredentials();
         if (!this.state.accountValid) {
             console.log("account was invalid");
             return;
@@ -46,26 +48,28 @@ export default class SignUp extends Component {
           })
     }
 
-    async verifyCredentials() {
+    verifyCredentials() {
         var invalid = this.state.firstName.length === 0 || this.state.lastName.length === 0 || this.state.email.length === 0 || this.state.password.length === 0;
-        console.log("invalid = ")
-        console.log(invalid);
         this.setState({accountValid: !invalid});
     }
 
     setFirstName(event) {
+        this.verifyCredentials();
         this.setState({firstName: event.target.value});
     }
 
     setLastName(event) {
+        this.verifyCredentials();
         this.setState({lastName: event.target.value});
     }
 
     setEmail(event) {
+        this.verifyCredentials();
         this.setState({email: event.target.value});
     }
 
     setPassword(event) {
+        this.verifyCredentials();
         this.setState({password: event.target.value});
     }
 
@@ -74,6 +78,7 @@ export default class SignUp extends Component {
     // }
 
     setAccountType(event) {
+        this.verifyCredentials();
         this.setState({accountType: event.target.value});
         // await this.timeout(1000);
     }
