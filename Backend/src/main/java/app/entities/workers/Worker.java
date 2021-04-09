@@ -16,11 +16,19 @@ public class Worker extends User {
     @DBRef
     private Job currentJob;
 
+    public Worker(String firstName, String lastName, String email, String password) {
+        super(firstName, lastName, email, password);
+    }
+
+    public Worker(String firstName, String lastName, String email, String password, List<Skill> skills) {
+        super(firstName, lastName, email, password);
+        this.skills = skills;
+    }
+
     public Worker(String firstName, String lastName, String email, String password, List<Skill> skills, Location location) {
         super(firstName, lastName, email, password);
         this.skills = skills;
         this.location = location;
-
     }
 
     @Override
