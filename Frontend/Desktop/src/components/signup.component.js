@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
-import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
-import { Mutation} from "@apollo/client/react/components";
+import { Mutation } from "@apollo/client/react/components";
+import { MUTATE_EMPLOYER_ACCOUNT, MUTATE_WORKER_ACCOUNT } from './mutations';
+import { SkillInput } from '../classes/SkillInput';
+import { LocationInput } from '../classes/LocationInput';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -25,17 +27,19 @@ export default class SignUp extends Component {
         accountType: "Task Generator",
         accountValid: false,
         nextPage: "/tasks",
-        userId: null
+        userId: null,
+        skills: new SkillInput("newSkill", 3),
+        location: new LocationInput(1, 1)
       };
 
-    createAccount(createEmployer) {
+    createAccount(createWorker) {
         this.verifyCredentials();
         if (!this.state.accountValid) {
             console.log("account was invalid");
             return;
         }
 
-        createEmployer()
+        createWorker()
           .then(res => {
             console.log("post response");
             console.log(res);
@@ -125,12 +129,14 @@ export default class SignUp extends Component {
                         firstName: this.state.firstName,
                         lastName: this.state.lastName,
                         email: this.state.email,
-                        password: this.state.password
-                    }} mutation={MUTATE_EMPLOYER_ACCOUNT}>
+                        password: this.state.password,
+                        skills: this.state.skills,
+                        location: this.state.location
+                    }} mutation={MUTATE_WORKER_ACCOUNT}>
                         {
-                            (createEmployer) => {
+                            (createWorker) => {
                             return (
-                                <button type="submit" className="btn btn-primary btn-block" onClick={() => this.createAccount(createEmployer)}>Sign Up</button>
+                                <button type="submit" className="btn btn-primary btn-block" onClick={() => this.createAccount(createWorker)}>Sign Up</button>
                                 );
                             }
                         }
