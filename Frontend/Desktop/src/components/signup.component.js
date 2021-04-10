@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
 import { Mutation } from "@apollo/client/react/components";
-import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
+import { MUTATE_EMPLOYER_ACCOUNT, MUTATE_WORKER_ACCOUNT } from './mutations';
+import { SkillInput } from '../classes/SkillInput';
 import { LocationInput } from '../classes/LocationInput';
-import { SkillsInput } from '../classes/SkillsInput';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -20,6 +20,7 @@ export default class SignUp extends Component {
       }
 
       state = {
+        userId: null,
         firstName: "",
         lastName: "",
         email: "",
@@ -27,9 +28,8 @@ export default class SignUp extends Component {
         accountType: "Task Generator",
         accountValid: false,
         nextPage: "/tasks",
-        userId: null,
-        location: null,
-        skills: null
+        skills: new SkillInput("newSkill", 3),
+        location: null
       };
 
     createAccount(createEmployer) {
@@ -43,8 +43,8 @@ export default class SignUp extends Component {
           .then(res => {
             console.log("post response");
             console.log(res);
-            console.log(res.data.id);
-            this.setState({ articleId: res.data.id })
+            // console.log(res.data.createWorker.id);
+            // this.setState({userId: res.data.createWorker.id})
           })
     }
 
@@ -83,12 +83,12 @@ export default class SignUp extends Component {
         // await this.timeout(1000);
     }
 
-
     render() {
         console.log("in render method");
         console.log(this.state.accountValid);
         var pathname = this.state.accountType === "Task Generator" ? "/tasks" : "/assignments";
         pathname = this.state.accountValid ? pathname : "/"
+        var mutationToExecute = this.state.accountType === "Task Generator" ? MUTATE_EMPLOYER_ACCOUNT : MUTATE_WORKER_ACCOUNT;
 
         return (
             <div className="auth-wrapper">
@@ -132,7 +132,7 @@ export default class SignUp extends Component {
                         lastName: this.state.lastName,
                         email: this.state.email,
                         password: this.state.password
-                    }} mutation={MUTATE_EMPLOYER_ACCOUNT}>
+                    }} mutation={mutationToExecute}>
                         {
                             (createEmployer) => {
                             return (

@@ -171,7 +171,8 @@ className modal fade is ideal but not working
         </div>
 
         <ul className="list-group">
-          { this.state.skills.map(skill => <li className="list-group-item">{skill}</li>)}
+          <li className="list-group-item"><b>My Skills</b></li>
+          {this.state.skills.map(skill => <li className="list-group-item">{skill}</li>)}
         </ul>
       </div>
             </div>
