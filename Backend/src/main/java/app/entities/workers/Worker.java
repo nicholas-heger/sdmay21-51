@@ -16,6 +16,10 @@ public class Worker extends User {
     @DBRef
     private Job currentJob;
 
+    public Worker(){
+        super(null,null,null,null);
+    }
+
     public Worker(String firstName, String lastName, String email, String password) {
         super(firstName, lastName, email, password);
     }
