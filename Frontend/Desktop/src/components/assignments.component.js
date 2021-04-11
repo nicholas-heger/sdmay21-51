@@ -13,13 +13,13 @@ export default class Assignments extends Component {
   } 
 
   state = {
-    userId: "60720f6bb710cc41ed4783d3",
+    userId: "",
     firstName: "",
     lastName: "",
     email: "",
-    accountType: "Task Generator",
+    accountType: "",
     skills: new SkillInput("newSkill", 3),
-    location: new LocationInput(2, 2),
+    location: null,
     persons: [],
     name1: null,
     personNames: [],
@@ -32,19 +32,18 @@ export default class Assignments extends Component {
       .then(res => {
         console.log("post response");
         console.log(res);
-        console.log(res.data.id);
-        this.setState({ userId: res.data.id })
       })
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this?.props?.location?.state !== undefined) {
-      // console.log("UserId");
-      // console.log(this.props.location.state.userId);
-      this.setState({firstName: this.props.location.state.firstName})
-      this.setState({lastName: this.props.location.state.lastName})
-      this.setState({email: this.props.location.state.email})
-      this.setState({accountType: this.props.location.state.accountType})
+      this.setState({firstName: this.props.location.state.firstName});
+      this.setState({lastName: this.props.location.state.lastName});
+      this.setState({email: this.props.location.state.email});
+      this.setState({accountType: this.props.location.state.accountType});
+      console.log("userId in local storage");
+      console.log(localStorage.getItem('userId'));
+      this.setState({userId: localStorage.getItem('userId')});
     }
 
     if ("geolocation" in navigator) {
@@ -53,18 +52,14 @@ export default class Assignments extends Component {
       console.log("Not Available");
     }
 
-    var latitude;
-    var longitude;
-
     // Only will work if location is allowed (if "Available" is printed above)
-    navigator.geolocation.getCurrentPosition(function(position) {
-      console.log("Latitude is :", position.coords.latitude);
-      console.log("Longitude is :", position.coords.longitude);
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-    });
+    var position = await this.getPosition();
+    console.log("POSITION");
+    console.log(position);
 
-    this.setState({location: new LocationInput(latitude, longitude)});
+    this.setState({location: new LocationInput(position.coords.latitude, position.coords.longitude)});
+    console.log("location when it is set for realsies");
+    console.log(this.state.location);
 
     axios.get(`https://api.mocki.io/v1/98d5b2a9`)
           .then(res => {
@@ -95,9 +90,21 @@ export default class Assignments extends Component {
           })
   }
 
+  getPosition() {
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
+  }
+
+  // timeout(delay) {
+  //   return new Promise(res => setTimeout(res, delay) );
+  // }
+
   render() {
-    console.log("state location");
-    console.log(this.state.locatiion);
+    console.log("state.location");
+    console.log(this.state.location);
+    console.log("state.userId");
+    console.log(this.state.userId);
 
     return (
       <div className="auth-wrapper">
@@ -109,7 +116,7 @@ export default class Assignments extends Component {
 
         <Mutation variables={{
           id: this.state.userId,
-          location: new LocationInput(3, 4)
+          location: this.state.location
         }} mutation={MUTATE_WORKER_ACCOUNT_ADD_LOCATION}>
           {
               (addLocation) => {

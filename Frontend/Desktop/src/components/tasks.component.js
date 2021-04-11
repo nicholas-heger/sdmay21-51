@@ -11,11 +11,13 @@ export default class Tasks extends Component {
   } 
 
   state = {
-    email: null,
-    accountType: null,
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    accountType: "",
     persons: [],
     name1: null,
-    test: null,
     personNames: [],
     id: 1,
     tasks: [],

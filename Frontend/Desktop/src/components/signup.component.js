@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import DelayLink from 'react-delay-link';
 import axios from 'axios';
 import { Mutation } from "@apollo/client/react/components";
 import { MUTATE_EMPLOYER_ACCOUNT, MUTATE_WORKER_ACCOUNT } from './mutations';
@@ -25,10 +26,10 @@ export default class SignUp extends Component {
         lastName: "",
         email: "",
         password: "",
-        accountType: "Task Generator",
+        accountType: "Employer",
         accountValid: false,
         nextPage: "/tasks",
-        skills: new SkillInput("newSkill", 3),
+        skills: null,
         location: null
       };
 
@@ -43,8 +44,15 @@ export default class SignUp extends Component {
           .then(res => {
             console.log("post response");
             console.log(res);
-            // console.log(res.data.createWorker.id);
-            // this.setState({userId: res.data.createWorker.id})
+            if(this.state.accountType === "Employer") {
+                console.log(res.data.createEmployer.id);
+                this.setState({userId: res.data.createEmployer.id})
+                localStorage.setItem('userId', res.data.createEmployer.id);
+            } else {
+                console.log(res.data.createWorker.id);
+                this.setState({userId: res.data.createWorker.id})
+                localStorage.setItem('userId', res.data.createWorker.id);
+            }
           })
     }
 
@@ -84,11 +92,9 @@ export default class SignUp extends Component {
     }
 
     render() {
-        console.log("in render method");
-        console.log(this.state.accountValid);
-        var pathname = this.state.accountType === "Task Generator" ? "/tasks" : "/assignments";
+        var pathname = this.state.accountType === "Employer" ? "/tasks" : "/assignments";
         pathname = this.state.accountValid ? pathname : "/"
-        var mutationToExecute = this.state.accountType === "Task Generator" ? MUTATE_EMPLOYER_ACCOUNT : MUTATE_WORKER_ACCOUNT;
+        var mutationToExecute = this.state.accountType === "Employer" ? MUTATE_EMPLOYER_ACCOUNT : MUTATE_WORKER_ACCOUNT;
 
         return (
             <div className="auth-wrapper">
@@ -121,12 +127,12 @@ export default class SignUp extends Component {
                 <div className="form-group">
                     <label>Account Type</label>
                     <select type="select" className="form-control" onChange={this.setAccountType} value={this.state.accountType}>
-                        <option defaultValue>Task Generator</option>
+                        <option defaultValue>Employer</option>
                         <option>Worker</option>
                     </select>
                 </div>
 
-                <Link to={{pathname: pathname, state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+                <DelayLink delay={1000} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <Mutation variables={{
                         firstName: this.state.firstName,
                         lastName: this.state.lastName,
@@ -141,7 +147,7 @@ export default class SignUp extends Component {
                             }
                         }
                     </Mutation>
-                </Link>
+                </DelayLink>
                 <p className="forgot-password text-right">
                     Already registered <a href="../sign-in">sign in?</a>
                 </p>
