@@ -11,6 +11,16 @@ import Skills from "./components/skills.component";
 import MapPage from "./components/map.component";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lng: -93.6429,
+      lat: 42.0339,
+      zoom: 12,
+      start: [-93.6429, 42.0339],
+      end: [-93.663740, 42.003480]
+    };
+  }
 
   render() {
     return (<Router>
@@ -50,7 +60,7 @@ class App extends React.Component {
                   <Route path="/tasks" component={Tasks}/>
                   <Route path="/assignments" component={Assignments}/>
                   <Route path="/skills" component={Skills}/>
-                  <Route path="/map" component={MapPage}/>
+                  <Route path="/map" component={() => <MapPage state={this.state}/>}/>
                 </Switch>
           </div>
         </Router>

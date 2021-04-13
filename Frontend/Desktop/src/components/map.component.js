@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
+//DO NOT REMOVE NEXT LINE
 //eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
 
@@ -15,16 +16,10 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibG9ncmFuZCIsImEiOiJja2w4Y2gwMGoyNGwxMm9xajM1Y
 export default class Map extends React.PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-            lng: -93.6429,
-            lat: 42.0339,
-            zoom: 12,
-        };
         this.mapContainer = React.createRef();
-
     }
     componentDidMount() {
-        const { lng, lat, zoom } = this.state;
+        const { lng, lat, zoom, start, end } = this.props.state;
         const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
         const map = new mapboxgl.Map({
             container: this.mapContainer.current,
@@ -32,41 +27,14 @@ export default class Map extends React.PureComponent {
             center: [lng, lat],
             zoom: zoom
         });
-        //parses direction and enters them in box
-        geocoder.on('result', (e) => {
-            //let test = document.getElementById('test');
-            let coords = e.result.center
-            console.log('longitude= ', coords[0]);
-            console.log('latitude= ', coords[1]);
-            this.setState({
-                lng: coords[0],
-                lat: coords[1]
-            });
-            //this.test.innerHTML = coords;
 
-
-        })
-        //component for showing current state values
-        map.addControl(geocoder);
-        //updates center coordinates when the user moves the map
-        map.on('move', () => {
-            /*this.setState({
-                lng: map.getCenter().lng.toFixed(4),
-                lat: map.getCenter().lat.toFixed(4),
-                zoom: map.getZoom().toFixed(2)
-            }, () => {
-                //console.log('longitude= ', this.state.lng);
-                //console.log('latitude= ', this.state.lat);
-            });*/
-        });
         //activates on the user loading the map
         map.on('load', () => {
             // make an initial directions request that
-            // starts and ends at the same location
-            let start = [lng, lat];
+            // starts and ends at the same location initializes map
             getRoute(start, start);
 
-            // Add starting point to the map
+            //add start point circle (visual only)
             map.addLayer({
                 id: 'start',
                 type: 'circle',
@@ -90,12 +58,154 @@ export default class Map extends React.PureComponent {
                     'circle-color': '#3887be'
                 }
             });
+
+            //add end point circle (visual only)
+            map.addLayer({
+                id: 'end',
+                type: 'circle',
+                source: {
+                    type: 'geojson',
+                    data: {
+                        type: 'FeatureCollection',
+                        features: [{
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Point',
+                                coordinates: end
+                            }
+                        }
+                        ]
+                    }
+                },
+                paint: {
+                    'circle-radius': 10,
+                    'circle-color': '#be384c'
+                }
+            });
+
+            //creates actual route
+            getRoute(start, end);
         });
-        //picks endpoint when user clicks
+
+        //returns a route based on start and end points, start point is fixed currently
+        const getRoute = (start, end) => {
+
+
+            let url = 'https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] +
+                ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+            // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
+            let req = new XMLHttpRequest();
+            req.open('GET', url, true);
+            req.onload = function() {
+                let json = JSON.parse(req.response);
+                let data = json.routes[0];
+                let route = data.geometry.coordinates;
+                let geojson = {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: route
+                    }
+                };
+
+
+                // if the route already exists on the map, reset it using setData
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(geojson);
+                } else { // otherwise, make a new request
+                    map.addLayer({
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'LineString',
+                                    coordinates: geojson
+                                }
+                            }
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#3887be',
+                            'line-width': 5,
+                            'line-opacity': 0.75
+                        }
+                    });
+                }
+                let instructions = document.getElementById('instructions');
+                let steps = data.legs[0].steps;
+                let tripInstructions = "";
+                for (let i = 0; i < steps.length; i++) {
+                    tripInstructions = tripInstructions + '<li>' + steps[i].maneuver.instruction + '</li>';
+                    instructions.innerHTML = '<br><span class="duration">Trip duration: ' + Math.floor(data.duration / 60) + ' min  </span>' + '<ul>' + tripInstructions + '</ul>';
+                }
+            };
+            req.send();
+        };
+    }
+
+
+    render() {
+        const { lng, lat, zoom } = this.props.state;
+        // get the sidebar and add the instructions
+
+
+        return (
+            <div>
+                <div className="sidebar">
+                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+                </div>
+                <div ref={this.mapContainer} className="map-container" />
+                <div id="instructions">
+                </div>
+            </div>
+        );
+    }
+}
+
+
+//old stuff for reference
+/*
+        //parses direction and enters them in box
+        geocoder.on('result', (e) => {
+            //let test = document.getElementById('test');
+            let coords = e.result.center
+            console.log('longitude= ', coords[0]);
+            console.log('latitude= ', coords[1]);
+            this.setState({
+                lng: coords[0],
+                lat: coords[1]
+            });
+            //this.test.innerHTML = coords;
+
+
+        })
+        //component for showing current state values
+        map.addControl(geocoder);
+        //updates center coordinates when the user moves the map
+        map.on('move', () => {
+            /*this.setState({
+                lng: map.getCenter().lng.toFixed(4),
+                lat: map.getCenter().lat.toFixed(4),
+                zoom: map.getZoom().toFixed(2)
+            }, () => {
+                //console.log('longitude= ', this.props.state.lng);
+                //console.log('latitude= ', this.props.state.lat);
+            });
+        });*/
+/*//picks endpoint when user clicks
         map.on('click', (e) => {
-            let startCoords = [this.state.lng, this.state.lat];
-            console.log('longitude= ',this.state.lng);
-            console.log('latitude= ',this.state.lat);
+            let startCoords = [this.props.state.lng, this.props.state.lat];
+            console.log('longitude= ',this.props.state.lng);
+            console.log('latitude= ',this.props.state.lat);
             let coordsObj = e.lngLat;
             let endCoords = Object.keys(coordsObj).map(function(key) {
                 return coordsObj[key];
@@ -178,97 +288,7 @@ export default class Map extends React.PureComponent {
                 }
             }
             getRoute(startCoords, endCoords);
-        })
-        //returns a route based on start and end points, start point is fixed currently
-        const getRoute = (start, end) => {
-
-
-            let url = 'https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] +
-                ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
-            // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
-            let req = new XMLHttpRequest();
-            req.open('GET', url, true);
-            req.onload = function() {
-                let json = JSON.parse(req.response);
-                let data = json.routes[0];
-                let route = data.geometry.coordinates;
-                let geojson = {
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'LineString',
-                        coordinates: route
-                    }
-                };
-                // if the route already exists on the map, reset it using setData
-                if (map.getSource('route')) {
-                    map.getSource('route').setData(geojson);
-                } else { // otherwise, make a new request
-                    map.addLayer({
-                        id: 'route',
-                        type: 'line',
-                        source: {
-                            type: 'geojson',
-                            data: {
-                                type: 'Feature',
-                                properties: {},
-                                geometry: {
-                                    type: 'LineString',
-                                    coordinates: geojson
-                                }
-                            }
-                        },
-                        layout: {
-                            'line-join': 'round',
-                            'line-cap': 'round'
-                        },
-                        paint: {
-                            'line-color': '#3887be',
-                            'line-width': 5,
-                            'line-opacity': 0.75
-                        }
-                    });
-                }
-                let instructions = document.getElementById('instructions');
-                let steps = data.legs[0].steps;
-                let tripInstructions = [];
-                for (let i = 0; i < steps.length; i++) {
-                    tripInstructions.push('<br><li>' + steps[i].maneuver.instruction + '</li>');
-                    instructions.innerHTML = '<br><span class="duration">Trip duration: ' + Math.floor(data.duration / 60) + ' min  </span>' + tripInstructions;
-                }
-            };
-            req.send();
-        };
-    }
-
-
-
-    //turn an address into geocoordinates
-    //function addToCoord(address){
-
-    //};
-
-    render() {
-        const { lng, lat, zoom } = this.state;
-        // get the sidebar and add the instructions
-
-
-        return (
-            <div>
-                <div className="sidebar">
-                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                </div>
-                <div ref={this.mapContainer} className="map-container" />
-                <div id="instructions">
-                </div>
-            </div>
-        );
-    }
-}
-
-
-
-
+        })*/
 
 
 
