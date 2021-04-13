@@ -146,6 +146,8 @@ public class JobMutationResolver implements GraphQLMutationResolver {
         worker.setCurrentJob(job);
         workerRepository.save(worker);
         job.setStatus(Job.Status.IN_PROGRESS);
+        job.setWorker(worker);
+        // job.setEstimatedTimeTillCompletion();
         jobRepository.save(job);
         return worker;
     }
