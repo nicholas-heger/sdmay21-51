@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
+//DO NOT REMOVE NEXT LINE
 //eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
 
@@ -150,7 +151,7 @@ export default class Map extends React.PureComponent {
             req.send();
         };
     }
-    
+
 
     render() {
         const { lng, lat, zoom } = this.props.state;

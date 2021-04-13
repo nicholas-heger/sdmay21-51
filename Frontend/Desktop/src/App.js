@@ -69,6 +69,3 @@ class App extends React.Component {
 }
 
 export default App;
-
-//<Route path="/map" component={MapPage}/>
-//<Route path="/map" component={() => <MapPage state={this.state}/>}/>
