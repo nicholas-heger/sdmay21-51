@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
+import { Query } from "@apollo/client/react/components";
+import { QUERY_GET_EMPLOYER_ACCOUNTS } from './queries';
+import {client} from '../index.js';
 
 export default class Login extends Component {
     constructor(props) {
@@ -12,15 +15,33 @@ export default class Login extends Component {
       }
     
       state = {
+        userId: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        accountType: "Task Generator",
+        accountType: "Employer",
         accountValid: true,
-        nextPage: "/tasks"
+        nextPage: "/tasks",
+        skills: null,
+        location: null,
       };
     
     signIn() {
-        // GET
+        client.query({
+            query: QUERY_GET_EMPLOYER_ACCOUNTS,
+        })
+        .then((res) => {
+            console.log("query data")
+            console.log(res.data)
+            this.setState({userId: res.data.id})
+            this.setState({firstName: res.data.firstName})
+            this.setState({lastName: res.data.lastName})
+            if(res.data.password === this.state.password){
+                this.setState({accountValid: true})
+            }
+            localStorage.setItem('userId', res.data.id);
+        })
     }
 
     setEmail(event) {
@@ -36,6 +57,9 @@ export default class Login extends Component {
     }
 
     render() {
+        var pathname = this.state.accountType === "Employer" ? "/tasks" : "/assignments";
+        pathname = this.state.accountValid ? pathname : "/";
+
         return (
             <div className="auth-wrapper">
                 <div className="auth-inner">
@@ -55,7 +79,7 @@ export default class Login extends Component {
                 <div className="form-group">
                     <label>Account Type</label>
                     <select type="select" className="form-control" onChange={this.setAccountType} value={this.state.accountType}>
-                        <option defaultValue>Task Generator</option>
+                        <option defaultValue>Employer</option>
                         <option>Worker</option>
                     </select>
                 </div>
@@ -67,8 +91,21 @@ export default class Login extends Component {
                     </div>
                 </div>
 
-                <Link to={{pathname: "/tasks", state: {email: this.state.email, accountType: this.state.accountType}}}>
-                    <button id="submitButton" type="submit" className="btn btn-primary btn-block">Submit</button>
+                <Link to={{pathname: pathname, state: {email: this.state.email, accountType: this.state.accountType}}}>
+                    <Query 
+                    variables={{
+                    //     email: this.state.email,
+                    //     password: this.state.password
+                    }} 
+                    query={QUERY_GET_EMPLOYER_ACCOUNTS}>
+                        {
+                            () => {
+                            return (
+                                <button id="submitButton" type="submit" className="btn btn-primary btn-block" onClick={() => this.signIn()}>Sign In</button>
+                                );
+                            }
+                        }
+                    </Query>
                 </Link>
                 <p className="forgot-password text-right">
                     Forgot <a href="#">password?</a>
