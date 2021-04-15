@@ -2,8 +2,6 @@ package app.entities.workers;
 
 import app.entities.common.Location;
 import app.entities.common.Skill;
-import app.entities.employers.Employer;
-import app.entities.employers.EmployerRepository;
 import app.entities.jobs.Job;
 import app.entities.jobs.JobRepository;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
@@ -13,26 +11,30 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
-public class WorkerQuery implements GraphQLQueryResolver {
+public class WorkerQueryResolver implements GraphQLQueryResolver {
 
     @Autowired
     public WorkerRepository workerRepository;
 
-
     @Autowired
     public JobRepository jobRepository;
 
-    public List<Worker> getWorkers() {
-        return workerRepository.findAll();
+    public List<Worker> getWorkers(Optional<String> email) {
+        List<Worker> workerList = workerRepository.findAll();
+        if (email.isPresent()) {
+            workerList = workerList.stream().filter(employer -> employer.getEmail().equals(email.get())).collect(Collectors.toList());
+        }
+        return workerList;
     }
 
-    public Worker findByFirstName(String firstName){
+    public Worker findByFirstName(String firstName) {
         return workerRepository.findByFirstName(firstName);
     }
 
-    public List<Worker> findByLastName(String lastName){
+    public List<Worker> findByLastName(String lastName) {
         return workerRepository.findByLastName(lastName);
     }
 
@@ -68,4 +70,6 @@ public class WorkerQuery implements GraphQLQueryResolver {
         }
         return output;
     }
+
+
 }

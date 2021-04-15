@@ -4,8 +4,12 @@ schema {
 }
 
 type Query {
-    employers:[Employer]
-    workers:[Worker]
+    employers (
+        email: String
+    ):[Employer]
+    workers (
+        email: String
+    ):[Worker]
     jobs:[Job]
 }
 

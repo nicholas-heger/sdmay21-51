@@ -11,5 +11,7 @@ public interface EmployerRepository extends MongoRepository<Employer, String> {
     public List<Employer> findByFirstName(String firstName);
 
     public List<Employer> findByLastName(String lastName);
+
+    public List<Employer> findByEmail(String email);
 }
 
