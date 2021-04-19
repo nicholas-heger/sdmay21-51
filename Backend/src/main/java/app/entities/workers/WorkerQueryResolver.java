@@ -22,12 +22,12 @@ public class WorkerQueryResolver implements GraphQLQueryResolver {
     @Autowired
     public JobRepository jobRepository;
 
-    public List<Worker> getWorkers(Optional<String> email) {
-        List<Worker> workerList = workerRepository.findAll();
-        if (email.isPresent()) {
-            workerList = workerList.stream().filter(employer -> employer.getEmail().equals(email.get())).collect(Collectors.toList());
-        }
-        return workerList;
+    public List<Worker> getWorkers() {
+        return workerRepository.findAll();
+    }
+
+    public List<Worker> getWorkersByEmail(String email) {
+        return workerRepository.findAll().stream().filter(employer -> employer.getEmail().equals(email)).collect(Collectors.toList());
     }
 
     public Worker findByFirstName(String firstName) {
