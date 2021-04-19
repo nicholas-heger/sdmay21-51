@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
 import { Query } from "@apollo/client/react/components";
-import { QUERY_GET_EMPLOYER_ACCOUNTS } from './queries';
+import { QUERY_GET_WORKER_BY_EMAIL } from './queries';
 import {client} from '../index.js';
 
 export default class Login extends Component {
@@ -29,7 +29,8 @@ export default class Login extends Component {
     
     signIn() {
         client.query({
-            query: QUERY_GET_EMPLOYER_ACCOUNTS,
+            variables: this.state.email,
+            query: QUERY_GET_WORKER_BY_EMAIL,
         })
         .then((res) => {
             console.log("query data")
@@ -92,12 +93,10 @@ export default class Login extends Component {
                 </div>
 
                 <Link to={{pathname: pathname, state: {email: this.state.email, accountType: this.state.accountType}}}>
-                    <Query 
-                    variables={{
-                    //     email: this.state.email,
-                    //     password: this.state.password
+                    <Query variables={{
+                        email: this.state.email,
                     }} 
-                    query={QUERY_GET_EMPLOYER_ACCOUNTS}>
+                    query={QUERY_GET_WORKER_BY_EMAIL}>
                         {
                             () => {
                             return (

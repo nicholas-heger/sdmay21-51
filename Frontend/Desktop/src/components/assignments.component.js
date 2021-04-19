@@ -20,10 +20,6 @@ export default class Assignments extends Component {
     accountType: "",
     skills: new SkillInput("newSkill", 3),
     location: null,
-    persons: [],
-    name1: null,
-    personNames: [],
-    id: 1, // this is old code, use userId but don't remove this yet
     tasks: [],
   };
 
@@ -53,41 +49,22 @@ export default class Assignments extends Component {
     }
 
     // Only will work if location is allowed (if "Available" is printed above)
+    this.updateLocation();
+    this.interval = setInterval(() => this.updateLocation(), 10000);
+  }
+
+  async updateLocation() {
+    console.log("updating location");
     var position = await this.getPosition();
-    console.log("POSITION");
-    console.log(position);
-
     this.setState({location: new LocationInput(position.coords.latitude, position.coords.longitude)});
-    console.log("location when it is set for realsies");
+    var addLocationDiv = document.getElementById("addLocationDiv");
+    addLocationDiv.click();
+    console.log("new location state:")
     console.log(this.state.location);
+  }
 
-    axios.get(`https://api.mocki.io/v1/98d5b2a9`)
-          .then(res => {
-            const name1 = res.data[0].name;
-            console.log("RES DATA");
-            console.log(res.data[0].name);
-            this.setState({name1: name1});
-
-            const persons = res.data;
-            console.log("PERSONS");
-            console.log(persons);
-            this.setState({ persons: persons });
-
-            const length = res.data.length;
-            var tasks = [];
-            for (var i = 0; i < length; i++) {
-              console.log(res.data[i].id);
-              if(res.data[i].id === this.state.id) {
-                console.log("ID FOUND");
-                const taskLength = res.data[i].skills.length; //change to tasks
-                for (var j = 0; j < taskLength; j++) {
-                  tasks[j] = res.data[i].skills[j]; // change to tasks
-                }
-              }
-            }
-            this.setState({ tasks: tasks });
-            console.log(tasks);
-          })
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   getPosition() {
@@ -101,11 +78,6 @@ export default class Assignments extends Component {
   // }
 
   render() {
-    console.log("state.location");
-    console.log(this.state.location);
-    console.log("state.userId");
-    console.log(this.state.userId);
-
     return (
       <div className="auth-wrapper">
         <div className="auth-inner">
@@ -121,7 +93,7 @@ export default class Assignments extends Component {
           {
               (addLocation) => {
               return (
-                  <button type="button" className="btn btn-primary" onClick={() => this.addLocation(addLocation)}>Push Location</button>
+                  <div style={{visibility: 'hidden'}} id="addLocationDiv" onClick={() => this.addLocation(addLocation)}></div>
                   );
               }
           }

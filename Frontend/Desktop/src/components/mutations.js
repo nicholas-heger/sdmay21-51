@@ -43,3 +43,14 @@ mutation(
   }
 }
 `;
+
+// export const MUTATE_WORKER_ACCOUNT_ADD_SKILL = gql`
+// mutation(
+//     $id: ID!
+//     $skills: [SkillInput]
+// ){
+//   updateWorker(id: $id, skills: $skills]) {
+//     id
+//   }
+// }
+// `;
