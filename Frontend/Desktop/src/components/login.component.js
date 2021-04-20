@@ -33,15 +33,17 @@ export default class Login extends Component {
             query: QUERY_GET_WORKER_BY_EMAIL,
         })
         .then((res) => {
+            console.log("email that was sent to backend")
+            console.log(this.state.email)
             console.log("query data")
             console.log(res.data)
-            this.setState({userId: res.data.id})
-            this.setState({firstName: res.data.firstName})
-            this.setState({lastName: res.data.lastName})
-            if(res.data.password === this.state.password){
-                this.setState({accountValid: true})
-            }
-            localStorage.setItem('userId', res.data.id);
+            // this.setState({userId: res.data.id})
+            // this.setState({firstName: res.data.firstName})
+            // this.setState({lastName: res.data.lastName})
+            // if(res.data.password === this.state.password){
+            //     this.setState({accountValid: true})
+            // }
+            // localStorage.setItem('userId', res.data.id);
         })
     }
 

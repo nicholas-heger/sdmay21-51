@@ -24,8 +24,8 @@ query getEmployerByEmail($email: String) {
 `;
 
 export const QUERY_GET_WORKER_ACCOUNTS = gql`
-query getAllEmployers {
-    employers {
+query getAllWorkers {
+    workers {
         id
         firstName
         lastName
@@ -35,8 +35,8 @@ query getAllEmployers {
 `;
 
 export const QUERY_GET_WORKER_BY_EMAIL = gql`
-query getWorkerByEmail($email: String) {
-    workers(email: $email) {
+query getWorkerByEmail($email: String!) {
+    workersByEmail(email: $email) {
         id
         firstName
         lastName

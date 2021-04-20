@@ -132,7 +132,7 @@ export default class SignUp extends Component {
                     </select>
                 </div>
 
-                <DelayLink delay={1000} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+                <DelayLink delay={1500} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <Mutation variables={{
                         firstName: this.state.firstName,
                         lastName: this.state.lastName,
