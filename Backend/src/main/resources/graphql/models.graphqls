@@ -5,7 +5,13 @@ schema {
 
 type Query {
     employers:[Employer]
+    employersByEmail (
+        email: String
+    ):[Employer]
     workers:[Worker]
+    workersByEmail (
+        email: String
+    ):[Worker]
     jobs:[Job]
 }
 
@@ -23,6 +29,7 @@ type Worker {
     email: String!
     skills: [Skill]
     location: Location
+    currentJob: Job
 }
 
 type Location {
@@ -52,6 +59,8 @@ type Job {
     location: Location
     description: String
     desiredSkills: [Skill]
+    status: String
+    estimatedTimeTillCompletion: Int
 }
 
 type Mutation {
@@ -117,6 +126,19 @@ type Mutation {
     deleteJob (
         id: ID!
     ): Boolean
+
+    acceptJob (
+        workerID: ID!
+        jobID: ID!
+    ): Worker
+
+    requestWorkersPrioritizeMinimumDistanceTraveled(
+        jobId: ID!
+    ): [Worker]
+
+    requestWorkersPrioritizeFastestTimeToCompleteJob (
+        jobId: ID!
+    ): [Worker]
 }
 
 type Tokens {

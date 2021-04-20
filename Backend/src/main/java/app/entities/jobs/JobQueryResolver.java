@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JobQuery implements GraphQLQueryResolver {
+public class JobQueryResolver implements GraphQLQueryResolver {
 
     @Autowired
     public JobRepository jobRepository;

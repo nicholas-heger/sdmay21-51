@@ -16,6 +16,8 @@ public interface WorkerRepository extends MongoRepository<Worker, String> {
 
     public Optional<Worker> findById(String id);
 
+    public Optional<Worker> findByEmail(String email);
+
     public List<Worker> findByLocation(Location location);
 
 }

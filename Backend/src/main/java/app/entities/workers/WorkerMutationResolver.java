@@ -27,9 +27,15 @@ public class WorkerMutationResolver implements GraphQLMutationResolver {
         return skillList;
     }
 
-    public Worker createWorker(String firstName, String lastName, String email, String password, List<Skill.SkillInput> skillList, Location.LocationInput locationInput) {
-        List<Skill> skillList1 = skillListInputToList(skillList);
-        Worker worker = new Worker(firstName, lastName, email, passwordEncoder.encode(password), skillList1, locationInput.toLocation());
+    public Worker createWorker(String firstName, String lastName, String email, String password, List<Skill.SkillInput> skillList, Optional<Location.LocationInput> locationInput) {
+        if (skillList != null) {
+            List<Skill> skillList1 = skillListInputToList(skillList);
+            Worker worker = new Worker(firstName, lastName, email, passwordEncoder.encode(password), skillList1);
+            locationInput.ifPresent(x->worker.setLocation(x.toLocation()));
+            return workerRepository.save(worker);
+        }
+        Worker worker = new Worker(firstName, lastName, email, passwordEncoder.encode(password));
+        locationInput.ifPresent(x->worker.setLocation(x.toLocation()));
         return workerRepository.save(worker);
     }
 
@@ -62,4 +68,5 @@ public class WorkerMutationResolver implements GraphQLMutationResolver {
             return false;
         }
     }
+
 }

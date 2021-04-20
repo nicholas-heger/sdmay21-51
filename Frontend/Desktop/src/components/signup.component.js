@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import DelayLink from 'react-delay-link';
 import axios from 'axios';
-import { MUTATE_EMPLOYER_ACCOUNT } from './mutations';
-import { Mutation} from "@apollo/client/react/components";
+import { Mutation } from "@apollo/client/react/components";
+import { MUTATE_EMPLOYER_ACCOUNT, MUTATE_WORKER_ACCOUNT } from './mutations';
+import { SkillInput } from '../classes/SkillInput';
+import { LocationInput } from '../classes/LocationInput';
 
 export default class SignUp extends Component {
     constructor(props) {
@@ -18,20 +21,20 @@ export default class SignUp extends Component {
       }
 
       state = {
+        userId: null,
         firstName: "",
         lastName: "",
         email: "",
         password: "",
-        accountType: "Task Generator",
+        accountType: "Employer",
         accountValid: false,
         nextPage: "/tasks",
-        articleId: null
+        skills: null,
+        location: null
       };
 
-    async createAccount(createEmployer) {
-        await this.verifyCredentials();
-        console.log("account validity = ");
-        console.log(this.state.accountValid);
+    createAccount(createEmployer) {
+        this.verifyCredentials();
         if (!this.state.accountValid) {
             console.log("account was invalid");
             return;
@@ -41,31 +44,40 @@ export default class SignUp extends Component {
           .then(res => {
             console.log("post response");
             console.log(res);
-            console.log(res.data.id);
-            this.setState({ articleId: res.data.id })
+            if(this.state.accountType === "Employer") {
+                console.log(res.data.createEmployer.id);
+                this.setState({userId: res.data.createEmployer.id})
+                localStorage.setItem('userId', res.data.createEmployer.id);
+            } else {
+                console.log(res.data.createWorker.id);
+                this.setState({userId: res.data.createWorker.id})
+                localStorage.setItem('userId', res.data.createWorker.id);
+            }
           })
     }
 
-    async verifyCredentials() {
+    verifyCredentials() {
         var invalid = this.state.firstName.length === 0 || this.state.lastName.length === 0 || this.state.email.length === 0 || this.state.password.length === 0;
-        console.log("invalid = ")
-        console.log(invalid);
         this.setState({accountValid: !invalid});
     }
 
     setFirstName(event) {
+        this.verifyCredentials();
         this.setState({firstName: event.target.value});
     }
 
     setLastName(event) {
+        this.verifyCredentials();
         this.setState({lastName: event.target.value});
     }
 
     setEmail(event) {
+        this.verifyCredentials();
         this.setState({email: event.target.value});
     }
 
     setPassword(event) {
+        this.verifyCredentials();
         this.setState({password: event.target.value});
     }
 
@@ -74,18 +86,19 @@ export default class SignUp extends Component {
     // }
 
     setAccountType(event) {
+        this.verifyCredentials();
         this.setState({accountType: event.target.value});
         // await this.timeout(1000);
     }
 
-
     render() {
-        console.log("in render method");
-        console.log(this.state.accountValid);
-        var pathname = this.state.accountType === "Task Generator" ? "/tasks" : "/assignments";
+        var pathname = this.state.accountType === "Employer" ? "/tasks" : "/assignments";
         pathname = this.state.accountValid ? pathname : "/"
+        var mutationToExecute = this.state.accountType === "Employer" ? MUTATE_EMPLOYER_ACCOUNT : MUTATE_WORKER_ACCOUNT;
 
         return (
+            <div className="auth-wrapper">
+                <div className="auth-inner">
             <form>
                 <h3>Sign Up</h3>
 
@@ -114,18 +127,18 @@ export default class SignUp extends Component {
                 <div className="form-group">
                     <label>Account Type</label>
                     <select type="select" className="form-control" onChange={this.setAccountType} value={this.state.accountType}>
-                        <option defaultValue>Task Generator</option>
+                        <option defaultValue>Employer</option>
                         <option>Worker</option>
                     </select>
                 </div>
 
-                <Link to={{pathname: pathname, state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+                <DelayLink delay={1500} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <Mutation variables={{
                         firstName: this.state.firstName,
                         lastName: this.state.lastName,
                         email: this.state.email,
                         password: this.state.password
-                    }} mutation={MUTATE_EMPLOYER_ACCOUNT}>
+                    }} mutation={mutationToExecute}>
                         {
                             (createEmployer) => {
                             return (
@@ -134,11 +147,13 @@ export default class SignUp extends Component {
                             }
                         }
                     </Mutation>
-                </Link>
+                </DelayLink>
                 <p className="forgot-password text-right">
                     Already registered <a href="../sign-in">sign in?</a>
                 </p>
             </form>
+                </div>
+            </div>
         );
     }
 }

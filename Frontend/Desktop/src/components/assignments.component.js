@@ -1,110 +1,109 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
+import { Mutation } from "@apollo/client/react/components";
+import { MUTATE_WORKER_ACCOUNT_ADD_LOCATION } from './mutations';
+import { SkillInput } from '../classes/SkillInput';
+import { LocationInput } from '../classes/LocationInput';
 
 export default class Assignments extends Component {
   constructor(props) {
     super(props);
-    this.addTask = this.addTask.bind(this);
-    this.toggleModal = this.toggleModal.bind(this);
+    this.addLocation = this.addLocation.bind(this);
   } 
 
   state = {
-    totalReactPackages: null,
-    persons: [],
-    name1: null,
-    test: null,
-    personNames: [],
-    id: 1,
+    userId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    accountType: "",
+    skills: new SkillInput("newSkill", 3),
+    location: null,
     tasks: [],
-    showModal: false,
   };
 
-  addTask() {
-    // POST
-    this.toggleModal();
+  addLocation(addLocation) {
+    addLocation()
+      .then(res => {
+        console.log("post response");
+        console.log(res);
+      })
   }
 
-  toggleModal() {
-    console.log("toggleModal");
-    console.log(this.state.showModal);
-    const currentState = this.state.showModal;
-    this.setState({showModal: !currentState});
-  };
+  async componentDidMount() {
+    if (this?.props?.location?.state !== undefined) {
+      this.setState({firstName: this.props.location.state.firstName});
+      this.setState({lastName: this.props.location.state.lastName});
+      this.setState({email: this.props.location.state.email});
+      this.setState({accountType: this.props.location.state.accountType});
+      console.log("userId in local storage");
+      console.log(localStorage.getItem('userId'));
+      this.setState({userId: localStorage.getItem('userId')});
+    }
 
-  componentDidMount() {
-    axios.get(`https://api.mocki.io/v1/98d5b2a9`)
-          .then(res => {
-            const name1 = res.data[0].name;
-            console.log("RES DATA");
-            console.log(res.data[0].name);
-            this.setState({name1: name1});
+    if ("geolocation" in navigator) {
+      console.log("Available");
+    } else {
+      console.log("Not Available");
+    }
 
-            const persons = res.data;
-            console.log("PERSONS");
-            console.log(persons);
-            this.setState({ persons: persons });
-
-            const length = res.data.length;
-            var tasks = [];
-            for (var i = 0; i < length; i++) {
-              console.log(res.data[i].id);
-              if(res.data[i].id === this.state.id) {
-                console.log("ID FOUND");
-                const taskLength = res.data[i].skills.length; //change to tasks
-                for (var j = 0; j < taskLength; j++) {
-                  tasks[j] = res.data[i].skills[j]; // change to tasks
-                }
-              }
-            }
-            this.setState({ tasks: tasks });
-            console.log(tasks);
-          })
+    // Only will work if location is allowed (if "Available" is printed above)
+    this.updateLocation();
+    this.interval = setInterval(() => this.updateLocation(), 10000);
   }
+
+  async updateLocation() {
+    console.log("updating location");
+    var position = await this.getPosition();
+    this.setState({location: new LocationInput(position.coords.latitude, position.coords.longitude)});
+    var addLocationDiv = document.getElementById("addLocationDiv");
+    addLocationDiv.click();
+    console.log("new location state:")
+    console.log(this.state.location);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  getPosition() {
+    return new Promise((res, rej) => {
+        navigator.geolocation.getCurrentPosition(res, rej);
+    });
+  }
+
+  // timeout(delay) {
+  //   return new Promise(res => setTimeout(res, delay) );
+  // }
 
   render() {
     return (
+      <div className="auth-wrapper">
+        <div className="auth-inner">
       <div>
-        <Link to={{pathname: '/skills', state: {email: this.state.email, accountType: this.state.accountType}}}>
-          <button type="button" className="btn btn-primary">
-            View My Skills
-          </button>
+        <Link to={{pathname: '/skills', state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+          <button type="button" className="btn btn-primary">View My Skills</button>
         </Link>
 
-        <div className={this.state.showModal ? 'modal modalShow': 'modal modalHide'}  id="createTaskModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Create Task</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={this.toggleModal}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <input id="taskEntered" type="text" className="form-control" placeholder="Task Title" />
-                </div>
-                <div className="form-group">
-                  <input id="skillRequired" type="text" className="form-control" placeholder="Enter Skill Required" />
-                </div>
-                <div className="form-group">
-                  <input id="latitudeEntered" type="text" className="form-control" placeholder="Enter Latitude" />
-                </div>
-                <div className="form-group">
-                  <input id="longitudeEntered" type="text" className="form-control" placeholder="Enter Longitude" />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.toggleModal}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={this.addTask}>Save changes</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <Mutation variables={{
+          id: this.state.userId,
+          location: this.state.location
+        }} mutation={MUTATE_WORKER_ACCOUNT_ADD_LOCATION}>
+          {
+              (addLocation) => {
+              return (
+                  <div style={{visibility: 'hidden'}} id="addLocationDiv" onClick={() => this.addLocation(addLocation)}></div>
+                  );
+              }
+          }
+        </Mutation>
         <ul className="list-group">
-          { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
+          <li className="list-group-item"><b>Tasks Assigned To Me</b></li>
+          {this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
         </ul>
+      </div>
+        </div>
       </div>
     )
   }
