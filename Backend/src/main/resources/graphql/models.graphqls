@@ -118,3 +118,13 @@ type Mutation {
         id: ID!
     ): Boolean
 }
+
+type Tokens {
+  accessToken: String
+  refreshToken: String
+}
+
+type Mutation {
+  login(username: String, password: String!): Tokens
+}
+
