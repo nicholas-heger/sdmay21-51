@@ -49,8 +49,8 @@ export default class Assignments extends Component {
     }
 
     // Only will work if location is allowed (if "Available" is printed above)
-    // this.updateLocation();
-    // this.interval = setInterval(() => this.updateLocation(), 10000);
+    this.updateLocation();
+    this.interval = setInterval(() => this.updateLocation(), 10000);
   }
 
   async updateLocation() {

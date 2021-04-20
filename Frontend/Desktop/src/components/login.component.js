@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from 'axios';
 import { Query } from "@apollo/client/react/components";
-import { QUERY_GET_WORKER_BY_EMAIL } from './queries';
+import { QUERY_GET_EMPLOYER_BY_EMAIL, QUERY_GET_WORKER_BY_EMAIL } from './queries';
 import {client} from '../index.js';
 
 export default class Login extends Component {
@@ -27,23 +27,37 @@ export default class Login extends Component {
         location: null,
       };
     
-    signIn() {
+    signIn(queryToExecute) {
         client.query({
-            variables: this.state.email,
-            query: QUERY_GET_WORKER_BY_EMAIL,
+            query: queryToExecute,
+            variables: {email: this.state.email},
         })
         .then((res) => {
-            console.log("email that was sent to backend")
-            console.log(this.state.email)
-            console.log("query data")
-            console.log(res.data)
-            // this.setState({userId: res.data.id})
-            // this.setState({firstName: res.data.firstName})
-            // this.setState({lastName: res.data.lastName})
-            // if(res.data.password === this.state.password){
-            //     this.setState({accountValid: true})
-            // }
-            // localStorage.setItem('userId', res.data.id);
+            console.log("email that was sent to backend");
+            console.log(this.state.email);
+            console.log("query data");
+            console.log(res.data);
+            if(this.state.accountType === "Employer") {
+                if(res.data.employersByEmail.length > 0) {
+                    console.log(res.data.employersByEmail[0]);
+                    this.setState({userId: res.data.employersByEmail[0].id});
+                    this.setState({firstName: res.data.employersByEmail[0].firstName});
+                    this.setState({lastName: res.data.employersByEmail[0].lastName});
+                    localStorage.setItem('userId', res.data.employersByEmail[0].id);
+                } else {
+                    return;
+                }
+            } else {
+                if(res.data.workersByEmail.length > 0) {
+                    console.log(res.data.workersByEmail[0]);
+                    this.setState({userId: res.data.workersByEmail[0].id});
+                    this.setState({firstName: res.data.workersByEmail[0].firstName});
+                    this.setState({lastName: res.data.workersByEmail[0].lastName});
+                    localStorage.setItem('userId', res.data.workersByEmail[0].id);
+                } else {
+                    return;
+                }
+            }
         })
     }
 
@@ -62,6 +76,7 @@ export default class Login extends Component {
     render() {
         var pathname = this.state.accountType === "Employer" ? "/tasks" : "/assignments";
         pathname = this.state.accountValid ? pathname : "/";
+        var queryToExecute = this.state.accountType === "Employer" ? QUERY_GET_EMPLOYER_BY_EMAIL : QUERY_GET_WORKER_BY_EMAIL;
 
         return (
             <div className="auth-wrapper">
@@ -98,11 +113,11 @@ export default class Login extends Component {
                     <Query variables={{
                         email: this.state.email,
                     }} 
-                    query={QUERY_GET_WORKER_BY_EMAIL}>
+                    query={queryToExecute}>
                         {
                             () => {
                             return (
-                                <button id="submitButton" type="submit" className="btn btn-primary btn-block" onClick={() => this.signIn()}>Sign In</button>
+                                <button id="submitButton" type="submit" className="btn btn-primary btn-block" onClick={() => this.signIn(queryToExecute)}>Sign In</button>
                                 );
                             }
                         }

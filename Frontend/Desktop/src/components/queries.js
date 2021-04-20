@@ -13,8 +13,8 @@ query getAllEmployers {
 `;
 
 export const QUERY_GET_EMPLOYER_BY_EMAIL = gql`
-query getEmployerByEmail($email: String) {
-    employers(email: $email) {
+query getEmployerByEmail($email: String!) {
+    employersByEmail(email: $email) {
         id
         firstName
         lastName

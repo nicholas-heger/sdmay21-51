@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { LocationInput } from '../classes/LocationInput';
+import { SkillInput } from '../classes/SkillInput';
 
 export const MUTATE_EMPLOYER_ACCOUNT = gql`
 mutation(
@@ -44,13 +45,13 @@ mutation(
 }
 `;
 
-// export const MUTATE_WORKER_ACCOUNT_ADD_SKILL = gql`
-// mutation(
-//     $id: ID!
-//     $skills: [SkillInput]
-// ){
-//   updateWorker(id: $id, skills: $skills]) {
-//     id
-//   }
-// }
-// `;
+export const MUTATE_WORKER_ACCOUNT_ADD_SKILL = gql`
+mutation(
+    $id: ID!
+    $skills: [SkillInput]
+){
+  updateWorker(id: $id, skills: $skills) {
+    id
+  }
+}
+`;
