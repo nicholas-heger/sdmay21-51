@@ -41,6 +41,10 @@ query getWorkerByEmail($email: String!) {
         firstName
         lastName
         email
+        skills {
+            name
+            rating
+        }
     }
 }
 `;

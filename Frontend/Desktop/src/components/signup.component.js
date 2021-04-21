@@ -52,6 +52,7 @@ export default class SignUp extends Component {
                 console.log(res.data.createWorker.id);
                 this.setState({userId: res.data.createWorker.id})
                 localStorage.setItem('userId', res.data.createWorker.id);
+                localStorage.setItem('skills', null);
             }
           })
     }

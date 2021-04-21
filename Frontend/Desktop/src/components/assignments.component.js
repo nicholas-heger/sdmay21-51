@@ -17,8 +17,7 @@ export default class Assignments extends Component {
     firstName: "",
     lastName: "",
     email: "",
-    accountType: "",
-    skills: new SkillInput("newSkill", 3),
+    skills: [],
     location: null,
     tasks: [],
   };
@@ -36,10 +35,8 @@ export default class Assignments extends Component {
       this.setState({firstName: this.props.location.state.firstName});
       this.setState({lastName: this.props.location.state.lastName});
       this.setState({email: this.props.location.state.email});
-      this.setState({accountType: this.props.location.state.accountType});
-      console.log("userId in local storage");
-      console.log(localStorage.getItem('userId'));
       this.setState({userId: localStorage.getItem('userId')});
+      this.setState({skills: JSON.parse(localStorage.getItem('skills'))});
     }
 
     if ("geolocation" in navigator) {
@@ -82,7 +79,7 @@ export default class Assignments extends Component {
       <div className="auth-wrapper">
         <div className="auth-inner">
       <div>
-        <Link to={{pathname: '/skills', state: {firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+        <Link to={{pathname: '/skills', state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, skills: this.state.skills}}}>
           <button type="button" className="btn btn-primary">View My Skills</button>
         </Link>
 

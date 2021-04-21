@@ -21,16 +21,10 @@ export default class Skills extends Component {
     firstName: null,
     lastName: null,
     email: null,
-    skills: [new SkillInput("html", 5), new SkillInput("css", 4)],
+    skills: [],
     location: null,
     showModal: false,
     newSkill: null,
-    //mostly crap below here
-    persons: [],
-    name1: null,
-    test: null,
-    personNames: [],
-    id: 1,
   };
 
   addSkill(addSkill) {
@@ -39,7 +33,7 @@ export default class Skills extends Component {
         console.log("post response");
         console.log(res);
       })
-    this.setState({skills: [...this.state.skills, ...[this.state.newSkill]]});
+    this.setState({skills: this.state.skills == null ? [this.state.newSkill] : [...this.state.skills, ...[this.state.newSkill]]});
     this.toggleModal();
   }
 
@@ -73,89 +67,14 @@ export default class Skills extends Component {
   }
 
   componentDidMount() {
-    console.log("userId in local storage");
-    console.log(localStorage.getItem('userId'));
-    this.setState({userId: localStorage.getItem('userId')});
     if (this?.props?.location?.state !== undefined) {
-      // this.setState({firstName: this.props.location.state.firstName});
-      // this.setState({lastName: this.props.location.state.lastName});
-      // this.setState({email: this.props.location.state.email});
-      // this.setState({accountType: this.props.location.state.accountType});
+      this.setState({userId: this.props.location.state.userId});
+      if (this.props.location.state.skills == "null") {
+        this.setState({skills: null});
+      } else {
+        this.setState({skills: this.props.location.state.skills});
+      }
     }
-
-    // axios.get(`https://api.mocki.io/v1/98d5b2a9`)
-    //       .then(res => {
-    //         const name1 = res.data[0].name;
-    //         console.log("RES DATA");
-    //         console.log(res.data[0].name);
-    //         this.setState({name1: name1});
-
-    //         const persons = res.data;
-    //         console.log("PERSONS");
-    //         console.log(persons);
-    //         this.setState({ persons: persons });
-
-    //         const length = res.data.length;
-    //         var skills = [];
-    //         for (var i = 0; i < length; i++) {
-    //           console.log(res.data[i].id);
-    //           if(res.data[i].id === this.state.id) {
-    //             console.log("ID FOUND");
-    //             const skillLength = res.data[i].skills.length;
-    //             for (var j = 0; j < skillLength; j++) {
-    //               skills[j] = res.data[i].skills[j];
-    //             }
-    //           }
-    //         }
-    //         this.setState({ skills: skills });
-    //         console.log(skills);
-
-
-    //         console.log(persons.filter((person) => person.id === 1));
-    //       })
-
-
-
-        // axios.get(`https://jsonplaceholder.typicode.com/users`)
-        //   .then(res => {
-        //     const name1 = res.data[0].name;
-        //     console.log("RES DATA");
-        //     console.log(res.data[0].name);
-        //     this.setState({name1: name1});
-
-        //     const persons = res.data;
-        //     console.log("PERSONS");
-        //     console.log(persons);
-        //     this.setState({ persons: persons });
-
-        //     const length = res.data.length;
-        //     var personNames = [];
-        //     for (var i = 0; i < length; i++){
-        //       personNames[i] = res.data[i].name;
-        //     }
-        //     this.setState({personNames: personNames});
-        //     // console.log(persons.filter((person) => person.id === 1));
-        //   })
-
-    // axios.get(`https://jsonplaceholder.typicode.com/users`)
-    //   .then(res => {
-    //     const persons = res.data;
-    //     this.setState({ persons });
-    //     var json = JSON.parse(persons);
-    //     this.setState({id1: json[0].id});
-    //   })
-
-    // axios.get('https://jsonplaceholder.typicode.com/users')
-    //   .then(res => {
-    //     const {id, name} = res.data;
-    //     this.setState(state => {
-    //         const persons = state.persons.concat({id, name})
-
-    //         return {
-    //             persons,
-    //         };
-    //     });
-    //   })
     this.interval = setInterval(() => this.updateNewSkill(), 1000);
   }
 
@@ -193,7 +112,7 @@ export default class Skills extends Component {
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.toggleModal}>Close</button>
                 <Mutation variables={{
                         id: this.state.userId,
-                        skills: [...this.state.skills, ...[this.state.newSkill]]
+                        skills: this.state.skills == null ? [this.state.newSkill] : [...this.state.skills, ...[this.state.newSkill]]
                     }} mutation={MUTATE_WORKER_ACCOUNT_ADD_SKILL}>
                         {
                             (addSkill) => {
@@ -210,7 +129,7 @@ export default class Skills extends Component {
 
         <ul className="list-group">
           <li className="list-group-item"><b>My Skills</b></li>
-          {this.state.skills.map(skill => <li className="list-group-item d-flex justify-content-between align-items-center">{skill.name}<Badge>{skill.rating}</Badge></li>)}
+          {this.state.skills != null ? this.state.skills.map(skill => <li className="list-group-item d-flex justify-content-between align-items-center">{skill.name}<Badge>{skill.rating}</Badge></li>) : <p>You haven't added any skills yet!</p>}
         </ul>
       </div>
             </div>

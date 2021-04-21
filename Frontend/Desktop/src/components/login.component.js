@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import DelayLink from 'react-delay-link';
 import axios from 'axios';
 import { Query } from "@apollo/client/react/components";
 import { QUERY_GET_EMPLOYER_BY_EMAIL, QUERY_GET_WORKER_BY_EMAIL } from './queries';
@@ -53,7 +54,9 @@ export default class Login extends Component {
                     this.setState({userId: res.data.workersByEmail[0].id});
                     this.setState({firstName: res.data.workersByEmail[0].firstName});
                     this.setState({lastName: res.data.workersByEmail[0].lastName});
+                    this.setState({skills: res.data.workersByEmail[0].skills});
                     localStorage.setItem('userId', res.data.workersByEmail[0].id);
+                    localStorage.setItem('skills', JSON.stringify(res.data.workersByEmail[0].skills));
                 } else {
                     return;
                 }
@@ -109,7 +112,7 @@ export default class Login extends Component {
                     </div>
                 </div>
 
-                <Link to={{pathname: pathname, state: {email: this.state.email, accountType: this.state.accountType}}}>
+                <DelayLink delay={1000} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <Query variables={{
                         email: this.state.email,
                     }} 
@@ -122,7 +125,7 @@ export default class Login extends Component {
                             }
                         }
                     </Query>
-                </Link>
+                </DelayLink>
                 <p className="forgot-password text-right">
                     Forgot <a href="#">password?</a>
                 </p>
