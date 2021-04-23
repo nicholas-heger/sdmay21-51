@@ -16,4 +16,13 @@ public class Employer extends User {
                 this, this.getFirstName(), this.getLastName());
     }
 
+    public static class EmployerInput extends User {
+        public EmployerInput(String firstName, String lastName, String email, String password) {
+            super(firstName, lastName, email, password);
+        }
+        public Employer toEmployer() {
+            return new Employer(this.getFirstName(), this.getLastName(), this.getEmail(), this.getPassword());
+        }
+    }
+
 }

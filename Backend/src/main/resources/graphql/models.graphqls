@@ -13,9 +13,22 @@ type Query {
         email: String
     ):[Worker]
     jobs:[Job]
+    jobsByEmployerId(
+        employerId: ID!
+    ):[Job]
+    jobsByEmployer(
+        employer: EmployerInput!
+    ):[Job]
 }
 
 type Employer {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    email: String!
+}
+
+input EmployerInput {
     id: ID!
     firstName: String!
     lastName: String!

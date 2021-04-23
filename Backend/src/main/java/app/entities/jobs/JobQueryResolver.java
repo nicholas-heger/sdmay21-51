@@ -16,7 +16,19 @@ public class JobQueryResolver implements GraphQLQueryResolver {
     @Autowired
     public JobRepository jobRepository;
 
-    public List<Job> findByEmployer(Employer employer) {
+    public List<Job> getJobsByEmployerId(String employerId) {
+        List<Job> allJobs = jobRepository.findAll();
+        List<Job> output = new ArrayList<>();
+
+        for (Job job : allJobs) {
+            if (job.getEmployer().getId().equals(employerId)) {
+                output.add(job);
+            }
+        }
+        return output;
+    }
+
+    public List<Job> getJobsByEmployer(Employer employer) {
         return jobRepository.findByEmployer(employer);
     }
 
