@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-
 import axios from 'axios';
-
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import { Mutation } from "@apollo/client/react/components";
+import { MUTATE_JOBS } from './mutations';
+import { LocationInput } from '../classes/LocationInput';
+import { SkillInput } from '../classes/SkillInput';
 mapboxgl.accessToken = 'pk.eyJ1IjoibG9ncmFuZCIsImEiOiJja2w4Y2gwMGoyNGwxMm9xajM1YWJ6YmJnIn0.l4ocHpd5Wy5fJXGumuayUA';
 
 export default class Tasks extends Component {
@@ -12,6 +14,8 @@ export default class Tasks extends Component {
     super(props);
     this.addTask = this.addTask.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.setTaskDescription = this.setTaskDescription.bind(this);
+    this.setSkillRequired = this.setSkillRequired.bind(this);
   }
 
 
@@ -20,81 +24,59 @@ export default class Tasks extends Component {
     firstName: "",
     lastName: "",
     email: "",
-    accountType: "",
-    persons: [],
-    name1: null,
-    personNames: [],
-    id: 1,
-    tasks: [],
+    taskDescription: "",
+    taskLocation: null,
+    skillRequired: [],
     showModal: false,
   };
 
-  addTask() {
-    // POST
+  addTask(addTask) {
+    addTask()
+      .then(res => {
+        console.log("post response");
+        console.log(res);
+      })
     this.toggleModal();
   }
 
   toggleModal() {
-    console.log("toggleModal");
-    console.log(this.state.showModal);
+    console.log(this.state.userId);
+    console.log(this.state.taskLocation);
+    console.log(this.state.taskDescription);
+    console.log(this.state.skillRequired);
     const currentState = this.state.showModal;
     this.setState({showModal: !currentState});
-    console.log(this.state.accountType);
   };
+
+  setTaskDescription(event) {
+    this.setState({taskDescription: event.target.value});
+  }
+
+  setSkillRequired(event) {
+    this.setState({skillRequired: [new SkillInput(event.target.value, 3)]});
+  }
 
   componentDidMount() {
     // Data from sign up page
     if (this?.props?.location?.state !== undefined) {
-      console.log("Email");
-      console.log(this.props.location.state.email);
-      console.log("Account Type");
-      console.log(this.props.location.state.accountType);
       this.setState({email: this.props.location.state.email})
-      this.setState({accountType: this.props.location.state.accountType})
     }
 
+    this.setState({userId: localStorage.getItem('userId')});
+
     var geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken});
-    geocoder.addTo('#test');
+    geocoder.addTo('#TaskLocationInput');
 
     geocoder.on('result', (e) => {
       let coords = e.result.center
-      //console.log('longitude= ', coords[0]);
-      //console.log('latitude= ', coords[1]);
+      this.setState({taskLocation: new LocationInput(coords[0], coords[1])});
+      console.log('longitude= ', coords[0]);
+      console.log('latitude= ', coords[1]);
     })
-
-    // Get request
-    axios.get(`https://api.mocki.io/v1/98d5b2a9`)
-          .then(res => {
-            const name1 = res.data[0].name;
-            console.log("RES DATA");
-            console.log(res.data[0].name);
-            this.setState({name1: name1});
-
-            const persons = res.data;
-            console.log("PERSONS");
-            console.log(persons);
-            this.setState({ persons: persons });
-
-            const length = res.data.length;
-            var tasks = [];
-            for (var i = 0; i < length; i++) {
-              console.log(res.data[i].id);
-              if(res.data[i].id === this.state.id) {
-                console.log("ID FOUND");
-                const taskLength = res.data[i].skills.length; //change to tasks
-                for (var j = 0; j < taskLength; j++) {
-                  tasks[j] = res.data[i].skills[j]; // change to tasks
-                }
-              }
-            }
-            this.setState({ tasks: tasks });
-            console.log(tasks);
-          })
   }
 
   render() {
     return (
-
         <div className="auth-wrapper">
             <div className="auth-inner">
       <div>
@@ -113,30 +95,37 @@ export default class Tasks extends Component {
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <input id="taskEntered" type="text" className="form-control" placeholder="Task Title" />
+                  <input id="taskEntered" type="text" className="form-control" placeholder="Enter a Title for or Short Description of the Task" onChange={this.setTaskDescription}/>
                 </div>
                 <div className="form-group">
-                  <input id="skillRequired" type="text" className="form-control" placeholder="Enter Skill Required" />
-                </div>
-                <div className="form-group">
-                  <input id="latitudeEntered" type="text" className="form-control" placeholder="Enter Latitude" />
-                </div>
-                <div className="form-group">
-                  <input id="longitudeEntered" type="text" className="form-control" placeholder="Enter Longitude" />
+                  <input id="skillRequired" type="text" className="form-control" placeholder="Enter Skill Required" onChange={this.setSkillRequired}/>
                 </div>
                 <div>Enter Task Location</div>
-                <div id="test"></div>
+                <div id="TaskLocationInput"></div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={this.toggleModal}>Close</button>
-                <button type="button" className="btn btn-primary" onClick={this.addTask}>Save changes</button>
+                <Mutation variables={{
+                        employerId: this.state.userId,
+                        location: this.state.taskLocation,
+                        description: this.state.taskDescription,
+                        desiredSkills: this.state.skillRequired
+                    }} mutation={MUTATE_JOBS}>
+                        {
+                            (addTask) => {
+                            return (
+                              <button type="button" className="btn btn-primary" onClick={() => this.addTask(addTask)}>Save changes</button>
+                                );
+                            }
+                        }
+                </Mutation>
               </div>
             </div>
           </div>
         </div>
 
         <ul className="list-group">
-          { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
+          {/* { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)} */}
         </ul>
       </div>
             </div>

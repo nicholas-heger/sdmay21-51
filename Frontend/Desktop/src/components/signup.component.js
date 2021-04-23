@@ -40,6 +40,10 @@ export default class SignUp extends Component {
             return;
         }
 
+        localStorage.setItem('firstName', this.state.firstName);
+        localStorage.setItem('lastName', this.state.lastName);
+        localStorage.setItem('email', this.state.email);
+
         createEmployer()
           .then(res => {
             console.log("post response");
@@ -133,7 +137,7 @@ export default class SignUp extends Component {
                     </select>
                 </div>
 
-                <DelayLink delay={1500} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
+                <DelayLink delay={1000} to={{pathname: pathname, state: {userId: this.state.userId, firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, accountType: this.state.accountType}}}>
                     <Mutation variables={{
                         firstName: this.state.firstName,
                         lastName: this.state.lastName,

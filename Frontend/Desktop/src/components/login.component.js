@@ -29,13 +29,13 @@ export default class Login extends Component {
       };
     
     signIn(queryToExecute) {
+        localStorage.setItem('email', this.state.email);
+
         client.query({
             query: queryToExecute,
             variables: {email: this.state.email},
         })
         .then((res) => {
-            console.log("email that was sent to backend");
-            console.log(this.state.email);
             console.log("query data");
             console.log(res.data);
             if(this.state.accountType === "Employer") {
@@ -45,6 +45,8 @@ export default class Login extends Component {
                     this.setState({firstName: res.data.employersByEmail[0].firstName});
                     this.setState({lastName: res.data.employersByEmail[0].lastName});
                     localStorage.setItem('userId', res.data.employersByEmail[0].id);
+                    localStorage.setItem('firstName', res.data.employersByEmail[0].firstName);
+                    localStorage.setItem('lastName', res.data.employersByEmail[0].lastName);
                 } else {
                     return;
                 }
@@ -56,6 +58,8 @@ export default class Login extends Component {
                     this.setState({lastName: res.data.workersByEmail[0].lastName});
                     this.setState({skills: res.data.workersByEmail[0].skills});
                     localStorage.setItem('userId', res.data.workersByEmail[0].id);
+                    localStorage.setItem('firstName', res.data.workersByEmail[0].firstName);
+                    localStorage.setItem('lastName', res.data.workersByEmail[0].lastName);
                     localStorage.setItem('skills', JSON.stringify(res.data.workersByEmail[0].skills));
                 } else {
                     return;

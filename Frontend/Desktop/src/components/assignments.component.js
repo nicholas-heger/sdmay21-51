@@ -35,9 +35,10 @@ export default class Assignments extends Component {
       this.setState({firstName: this.props.location.state.firstName});
       this.setState({lastName: this.props.location.state.lastName});
       this.setState({email: this.props.location.state.email});
-      this.setState({userId: localStorage.getItem('userId')});
-      this.setState({skills: JSON.parse(localStorage.getItem('skills'))});
     }
+
+    this.setState({userId: localStorage.getItem('userId')});
+    this.setState({skills: JSON.parse(localStorage.getItem('skills'))});
 
     if ("geolocation" in navigator) {
       console.log("Available");

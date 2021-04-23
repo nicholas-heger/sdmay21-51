@@ -55,3 +55,16 @@ mutation(
   }
 }
 `;
+
+export const MUTATE_JOBS = gql`
+mutation(
+    $employerId: String!
+    $location: LocationInput!
+    $description: String!
+    $desiredSkills: [SkillInput]
+){
+  createJob(employerId: $employerId, location: $location, description: $description, desiredSkills: $desiredSkills) {
+    id
+  }
+}
+`;

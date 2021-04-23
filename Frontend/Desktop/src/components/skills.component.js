@@ -121,7 +121,7 @@ export default class Skills extends Component {
                                 );
                             }
                         }
-                    </Mutation>
+                </Mutation>
               </div>
             </div>
           </div>
