@@ -43,6 +43,7 @@ export default class SignUp extends Component {
         localStorage.setItem('firstName', this.state.firstName);
         localStorage.setItem('lastName', this.state.lastName);
         localStorage.setItem('email', this.state.email);
+        localStorage.setItem('accountType', this.state.accountType);
 
         createEmployer()
           .then(res => {

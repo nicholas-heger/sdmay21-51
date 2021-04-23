@@ -4,7 +4,10 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl-csp';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { Mutation } from "@apollo/client/react/components";
+import { Query } from "@apollo/client/react/components";
+import {client} from '../index.js';
 import { MUTATE_JOBS } from './mutations';
+import { QUERY_GET_JOBS_BY_EMPLOYER } from './queries';
 import { LocationInput } from '../classes/LocationInput';
 import { SkillInput } from '../classes/SkillInput';
 mapboxgl.accessToken = 'pk.eyJ1IjoibG9ncmFuZCIsImEiOiJja2w4Y2gwMGoyNGwxMm9xajM1YWJ6YmJnIn0.l4ocHpd5Wy5fJXGumuayUA';
@@ -27,6 +30,7 @@ export default class Tasks extends Component {
     taskDescription: "",
     taskLocation: null,
     skillRequired: [],
+    tasksCreated: [],
     showModal: false,
   };
 
@@ -57,12 +61,24 @@ export default class Tasks extends Component {
   }
 
   componentDidMount() {
-    // Data from sign up page
+    this.setState({userId: localStorage.getItem('userId')});
     if (this?.props?.location?.state !== undefined) {
       this.setState({email: this.props.location.state.email})
     }
 
-    this.setState({userId: localStorage.getItem('userId')});
+    client.query({
+      query: QUERY_GET_JOBS_BY_EMPLOYER,
+      variables: {employerId: localStorage.getItem('userId')},
+    })
+    .then((res) => {
+        console.log("query data");
+        console.log(res.data);
+        var tasksCreated = [];
+        for (var i = 0; i < res.data.jobsByEmployerId.length; i++){
+          tasksCreated.push(res.data.jobsByEmployerId[i].description);
+        }
+        this.setState({tasksCreated: tasksCreated});
+    })
 
     var geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken});
     geocoder.addTo('#TaskLocationInput');
@@ -125,7 +141,7 @@ export default class Tasks extends Component {
         </div>
 
         <ul className="list-group">
-          {/* { this.state.tasks.map(task => <li className="list-group-item">{task}</li>)} */}
+          {this.state.tasksCreated.map(task => <li className="list-group-item">{task}</li>)}
         </ul>
       </div>
             </div>

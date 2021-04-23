@@ -30,6 +30,7 @@ export default class Login extends Component {
     
     signIn(queryToExecute) {
         localStorage.setItem('email', this.state.email);
+        localStorage.setItem('accountType', this.state.accountType);
 
         client.query({
             query: queryToExecute,

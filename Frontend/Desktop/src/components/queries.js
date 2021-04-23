@@ -48,3 +48,16 @@ query getWorkerByEmail($email: String!) {
     }
 }
 `;
+
+export const QUERY_GET_JOBS_BY_EMPLOYER = gql`
+query getJobsByEmployerId($employerId: ID!) {
+    jobsByEmployerId(employerId: $employerId) {
+        id
+        employer {
+            id
+            firstName
+        }
+        description
+    }
+}
+`;
