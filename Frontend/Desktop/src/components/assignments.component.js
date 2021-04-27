@@ -20,6 +20,8 @@ export default class Assignments extends Component {
     skills: [],
     location: null,
     tasks: [],
+    taskDescription: null,
+    taskLocation: null,
   };
 
   addLocation(addLocation) {
@@ -39,6 +41,9 @@ export default class Assignments extends Component {
 
     this.setState({userId: localStorage.getItem('userId')});
     this.setState({skills: JSON.parse(localStorage.getItem('skills'))});
+
+    this.setState({taskDescription: localStorage.getItem('taskAssignedDescription')});
+    this.setState({taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))});
 
     if ("geolocation" in navigator) {
       console.log("Available");
@@ -98,7 +103,7 @@ export default class Assignments extends Component {
         </Mutation>
         <ul className="list-group">
           <li className="list-group-item"><b>Tasks Assigned To Me</b></li>
-          {this.state.tasks.map(task => <li className="list-group-item">{task}</li>)}
+          <li className="list-group-item">{this.state.taskDescription}</li>
         </ul>
       </div>
         </div>

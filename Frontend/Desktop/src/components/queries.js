@@ -45,6 +45,13 @@ query getWorkerByEmail($email: String!) {
             name
             rating
         }
+        currentJob {
+            description
+            location {
+                latitude
+                longitude
+            }
+        }
     }
 }
 `;
