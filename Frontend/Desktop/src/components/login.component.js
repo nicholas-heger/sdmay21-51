@@ -62,6 +62,14 @@ export default class Login extends Component {
                     localStorage.setItem('firstName', res.data.workersByEmail[0].firstName);
                     localStorage.setItem('lastName', res.data.workersByEmail[0].lastName);
                     localStorage.setItem('skills', JSON.stringify(res.data.workersByEmail[0].skills));
+                    console.log(res.data.workersByEmail[0].currentJob);
+                    if(res.data.workersByEmail[0].currentJob != null){
+                        localStorage.setItem('taskAssignedDescription', res.data.workersByEmail[0].currentJob.description);
+                        localStorage.setItem('taskAssignedLocation', JSON.stringify(res.data.workersByEmail[0].currentJob.location));
+                    } else {
+                        localStorage.setItem('taskAssignedDescription', null);
+                        localStorage.setItem('taskAssignedLocation', null);
+                    }
                 } else {
                     return;
                 }
