@@ -30,19 +30,15 @@ export default class Map extends React.PureComponent {
         // this.setState({taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))});
         console.log(this.props.location.state.location);
         console.log(this.props.location.state.taskLocation);
-        if (this?.state?.location?.state !== undefined) {
+        if (this?.props?.location?.state !== undefined) {
             // console.log(this.props.location.state.location);
             // console.log(this.props.location.state.taskLocation);
             this.setState({location: this.props.location.state.location});
             this.setState({taskLocation: this.props.location.state.taskLocation});
 
             const zoom = 12;
-            // const start = {location: JSON.parse(localStorage.getItem('location'))}.location;
             const start = {location: this.props.location.state.location}.location;
-            // const start = new mapboxgl.LngLat(JSON.parse(localStorage.getItem('location')).longitude, JSON.parse(localStorage.getItem('location')).latitude);
-            // const end = {taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))}.taskLocation;
             const end = {taskLocation: this.props.location.state.taskLocation}.taskLocation;
-            // const end = new mapboxgl.LngLat(JSON.parse(localStorage.getItem('taskAssignedLocation')).longitude, JSON.parse(localStorage.getItem('taskAssignedLocation')).latitude);
 
             const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
             const map = new mapboxgl.Map({
