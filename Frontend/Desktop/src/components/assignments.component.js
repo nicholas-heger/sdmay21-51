@@ -60,10 +60,9 @@ export default class Assignments extends Component {
     console.log("updating location");
     var position = await this.getPosition();
     this.setState({location: new LocationInput(position.coords.latitude, position.coords.longitude)});
+    localStorage.setItem('location', JSON.stringify(new LocationInput(position.coords.latitude, position.coords.longitude)));
     var addLocationDiv = document.getElementById("addLocationDiv");
     addLocationDiv.click();
-    console.log("new location state:")
-    console.log(this.state.location);
   }
 
   componentWillUnmount() {
@@ -81,6 +80,9 @@ export default class Assignments extends Component {
   // }
 
   render() {
+    console.log("THIS BAD BOY");
+    console.log(this.state.location);
+    console.log(this.state.taskLocation);
     return (
       <div className="auth-wrapper">
         <div className="auth-inner">

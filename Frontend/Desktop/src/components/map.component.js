@@ -17,22 +17,28 @@ export default class Map extends React.PureComponent {
     constructor(props) {
         super(props);
         this.mapContainer = React.createRef();
-        this.state = {
-            location: null,
-            taskLocation: null,
-            flag: 0
-        }
     }
 
+    state = {
+        location: null,
+        taskLocation: null,
+        flag: 0
+    };
 
     componentDidMount() {
-        if (this?.props?.location?.state !== undefined) {
-            this.setState({location: this.props.location.state.location});
-            this.setState({taskLocation: this.props.location.state.taskLocation});
+        this.setState({location: JSON.parse(localStorage.getItem('location'))});
+        this.setState({taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))});
+        if (JSON.parse(localStorage.getItem('location')) !== null && JSON.parse(localStorage.getItem('location')) !== null) {
+            // console.log(this.props.location.state.location);
+            // console.log(this.props.location.state.taskLocation);
+            // this.setState({location: this.props.location.state.location});
+            // this.setState({taskLocation: this.props.location.state.taskLocation});
 
             const zoom = 12;
-            const start = {location: this.props.location.state.location}.location;
-            const end = {taskLocation: this.props.location.state.taskLocation}.taskLocation;
+            // const start = {location: JSON.parse(localStorage.getItem('location'))}.location;
+            const start = new mapboxgl.LngLat(JSON.parse(localStorage.getItem('location')).longitude, JSON.parse(localStorage.getItem('location')).latitude);
+            // const end = {taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))}.taskLocation;
+            const end = new mapboxgl.LngLat(JSON.parse(localStorage.getItem('taskAssignedLocation')).longitude, JSON.parse(localStorage.getItem('taskAssignedLocation')).latitude);
 
             const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
             const map = new mapboxgl.Map({
@@ -168,8 +174,8 @@ export default class Map extends React.PureComponent {
         };
             this.setState({flag: 0});
         }
-        else{
-            this.setState({flag: 1})
+        else {
+            this.setState({flag: 1});
         }
     }
 
@@ -177,6 +183,7 @@ export default class Map extends React.PureComponent {
     render() {
         //const { lng, lat, zoom } = this.props.state;
         // get the sidebar and add the instructions
+        console.log(this.state.flag);
         if(this.state.flag == 0){
         return (
             <div>
