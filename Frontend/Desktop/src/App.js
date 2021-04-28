@@ -60,7 +60,7 @@ class App extends React.Component {
                   <Route path="/tasks" component={Tasks}/>
                   <Route path="/assignments" component={Assignments}/>
                   <Route path="/skills" component={Skills}/>
-                  <Route path="/map" component={() => <MapPage state={this.state}/>}/>
+                  <Route path="/map" component={MapPage}/>
                 </Switch>
           </div>
         </Router>
