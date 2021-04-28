@@ -17,76 +17,92 @@ export default class Map extends React.PureComponent {
     constructor(props) {
         super(props);
         this.mapContainer = React.createRef();
+        this.state = {
+            location: null,
+            taskLocation: null,
+            flag: 0
+        }
     }
+
+
     componentDidMount() {
-        const { lng, lat, zoom, start, end } = this.props.state;
-        const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
-        const map = new mapboxgl.Map({
-            container: this.mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [lng, lat],
-            zoom: zoom
-        });
+        if (this?.props?.location?.state !== undefined) {
+            this.setState({location: this.props.location.state.location});
+            this.setState({taskLocation: this.props.location.state.taskLocation});
 
-        //activates on the user loading the map
-        map.on('load', () => {
-            // make an initial directions request that
-            // starts and ends at the same location initializes map
-            getRoute(start, start);
+            const zoom = 12;
+            const start = {location: this.props.location.state.location}.location;
+            const end = {taskLocation: this.props.location.state.taskLocation}.taskLocation;
 
-            //add start point circle (visual only)
-            map.addLayer({
-                id: 'start',
-                type: 'circle',
-                source: {
-                    type: 'geojson',
-                    data: {
-                        type: 'FeatureCollection',
-                        features: [{
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                                type: 'Point',
-                                coordinates: start
-                            }
-                        }
-                        ]
-                    }
-                },
-                paint: {
-                    'circle-radius': 10,
-                    'circle-color': '#3887be'
-                }
+            const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
+            const map = new mapboxgl.Map({
+                container: this.mapContainer.current,
+                style: 'mapbox://styles/mapbox/streets-v11',
+                center: start,
+                zoom: zoom
             });
 
-            //add end point circle (visual only)
-            map.addLayer({
-                id: 'end',
-                type: 'circle',
-                source: {
-                    type: 'geojson',
-                    data: {
-                        type: 'FeatureCollection',
-                        features: [{
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                                type: 'Point',
-                                coordinates: end
+
+            //activates on the user loading the map
+            map.on('load', () => {
+                // make an initial directions request that
+                // starts and ends at the same location initializes map
+                getRoute(start, start);
+
+                //add start point circle (visual only)
+                map.addLayer({
+                    id: 'start',
+                    type: 'circle',
+                    source: {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: [{
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: start
+                                }
                             }
+                            ]
                         }
-                        ]
+                    },
+                    paint: {
+                        'circle-radius': 10,
+                        'circle-color': '#3887be'
                     }
-                },
-                paint: {
-                    'circle-radius': 10,
-                    'circle-color': '#be384c'
-                }
+                });
+
+                //add end point circle (visual only)
+                map.addLayer({
+                    id: 'end',
+                    type: 'circle',
+                    source: {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: [{
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'Point',
+                                    coordinates: end
+                                }
+                            }
+                            ]
+                        }
+                    },
+                    paint: {
+                        'circle-radius': 10,
+                        'circle-color': '#be384c'
+                    }
+                });
+
+                //creates actual route
+                getRoute(start, end);
             });
 
-            //creates actual route
-            getRoute(start, end);
-        });
 
         //returns a route based on start and end points, start point is fixed currently
         const getRoute = (start, end) => {
@@ -150,24 +166,38 @@ export default class Map extends React.PureComponent {
             };
             req.send();
         };
+            this.setState({flag: 0});
+        }
+        else{
+            this.setState({flag: 1})
+        }
     }
 
 
     render() {
-        const { lng, lat, zoom } = this.props.state;
+        //const { lng, lat, zoom } = this.props.state;
         // get the sidebar and add the instructions
-
-
+        if(this.state.flag == 0){
         return (
             <div>
-                <div className="sidebar">
-                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                </div>
                 <div ref={this.mapContainer} className="map-container" />
                 <div id="instructions">
                 </div>
             </div>
         );
+        }
+        else{
+            return(
+                <div className="auth-wrapper">
+                    <div className="auth-inner">
+                        <div>
+                            <h3>No Route Selected: </h3>
+                            <p>Please go to the assignment page and select an assignment to route</p>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
     }
 }
 
