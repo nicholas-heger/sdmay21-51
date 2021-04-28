@@ -21,7 +21,6 @@ export default class Tasks extends Component {
     this.setSkillRequired = this.setSkillRequired.bind(this);
   }
 
-
   state = {
     userId: "",
     firstName: "",

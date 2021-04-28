@@ -103,7 +103,7 @@ export default class Assignments extends Component {
         </Mutation>
         <ul className="list-group">
           <li className="list-group-item"><b>Tasks Assigned To Me</b></li>
-          <li className="list-group-item">{this.state.taskDescription}</li>
+          {this.state.taskDescription == null || this.state.taskDescription == "null" ? <p>You have no tasks to complete right now!</p> : <li className="list-group-item">{this.state.taskDescription}</li>}
         </ul>
       </div>
         </div>
