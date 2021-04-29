@@ -138,7 +138,8 @@ export default class Tasks extends Component {
         </div>
 
         <ul className="list-group">
-          {this.state.tasksCreated.map(task => <li className="list-group-item">{task}</li>)}
+          <li className="list-group-item"><b>Tasks Created By Me</b></li>
+          {this.state.tasksCreated != null ? this.state.tasksCreated.map(task => <li className="list-group-item">{task}</li>) : <p>You haven't created any tasks yet!</p>}
         </ul>
       </div>
             </div>
