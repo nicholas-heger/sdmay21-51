@@ -84,9 +84,7 @@ export default class Tasks extends Component {
 
     geocoder.on('result', (e) => {
       let coords = e.result.center
-      this.setState({taskLocation: new LocationInput(coords[0], coords[1])});
-      console.log('longitude= ', coords[0]);
-      console.log('latitude= ', coords[1]);
+      this.setState({taskLocation: new LocationInput(coords[1], coords[0])});
     })
   }
 

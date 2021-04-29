@@ -26,10 +26,6 @@ export default class Map extends React.PureComponent {
     };
 
     componentDidMount() {
-        // this.setState({location: JSON.parse(localStorage.getItem('location'))});
-        // this.setState({taskLocation: JSON.parse(localStorage.getItem('taskAssignedLocation'))});
-        console.log(this.props.location.state.location);
-        console.log(this.props.location.state.taskLocation);
         if (this?.props?.location?.state !== undefined) {
             // console.log(this.props.location.state.location);
             // console.log(this.props.location.state.taskLocation);
@@ -37,8 +33,8 @@ export default class Map extends React.PureComponent {
             this.setState({taskLocation: this.props.location.state.taskLocation});
 
             const zoom = 12;
-            const start = {location: this.props.location.state.location}.location;
-            const end = {taskLocation: this.props.location.state.taskLocation}.taskLocation;
+            const start = [this.props.location.state.location.longitude, this.props.location.state.location.latitude];
+            const end = [this.props.location.state.taskLocation.longitude, this.props.location.state.taskLocation.latitude];
 
             const geocoder = new MapboxGeocoder({accessToken: mapboxgl.accessToken, mapboxgl: mapboxgl});
             const map = new mapboxgl.Map({
